@@ -1,10 +1,10 @@
 package com.example.cs255assignment;
+
 import java.lang.Math.*;
 
 public class Vector {
     double x, y, z;
-    public Vector() {
-    }
+    public Vector() {}
     public Vector(double i, double j, double k) {
         x = i;
         y = j;
