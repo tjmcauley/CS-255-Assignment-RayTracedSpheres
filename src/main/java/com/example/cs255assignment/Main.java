@@ -87,10 +87,28 @@ public class Main extends Application {
         //Get image dimensions, and declare loop variables
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
-        double c = green_col / 255.0;
-        Vector col = new Vector(0.5, c, 0.5);
+
+        //Line
+        Vector o = new Vector(0.5, 0.5, 0.5);
+        Vector d = new Vector(0, 0, 1);
+        Vector cs = new Vector(320, 320, 0);
+        double radius = 75;
+
+        Vector col = new Vector(0.5, 0.5, 0.5);
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
+                //ray origin = (i, j, -4);
+                o = new Vector(i, j, -600);
+                Vector v = o.sub(cs);
+                double a = d.dot(d);
+                double b = v.dot(d) * 2;
+                double c = v.dot(v) - radius * radius;
+                double disc = b * b - 4 * a * c;
+                if (disc < 0) {
+                    col = new Vector(0, 0, 0);
+                } else {
+                    col = new Vector(1, 0, 0);
+                }
                 image_writer.setColor(i, j, Color.color(col.x, col.y, col.z, 1.0));
             } // column loop
         } // row loop
