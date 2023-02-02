@@ -67,7 +67,35 @@ public class Main extends Application {
                     public void changed(ObservableValue < ? extends Number >
                                                 observable, Number oldValue, Number newValue) {
                         int x = newValue.intValue();
-                        Render(image, x);
+
+                        Render(image, x, 0, 0);
+                    }
+                });
+        Slider y_slider = new Slider(0, 640, 320);
+        y_slider.setShowTickLabels(true);
+        y_slider.setShowTickMarks(true);
+        y_slider.setMajorTickUnit(80);
+        //Add all the event handlers
+        y_slider.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int y = newValue.intValue();
+                        
+                        Render(image, 0, y, 0);
+                    }
+                });
+        Slider z_slider = new Slider(0, 640, 320);
+        z_slider.setShowTickLabels(true);
+        z_slider.setShowTickMarks(true);
+        z_slider.setMajorTickUnit(80);
+        //Add all the event handlers
+        z_slider.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int z = newValue.intValue();
+                        Render(image, 0, 0, z);
                     }
                 });
         //The following is in case you want to interact with the image in any way
@@ -77,22 +105,31 @@ public class Main extends Application {
             System.out.println(event.getX() + " " + event.getY());
             event.consume();
         });
-        Render(image, x_slider.valueProperty().intValue());
+        Render(image, x_slider.valueProperty().intValue(), y_slider.valueProperty().intValue(), z_slider.valueProperty().intValue());
         GridPane root = new GridPane();
         root.setVgap(12);
         root.setHgap(12);
         //3. (referring to the 3 things we need to display an image)
         //we need to add it to the pane
         Label xSliderLabel = new Label("X coord");
+        Label ySliderLabel = new Label("Y coord");
+        Label zSliderLabel = new Label("Z coord");
+
         root.add(view, 0, 0);
         root.add(xSliderLabel, 0, 1);
         root.add(x_slider, 0, 2);
+
+        root.add(ySliderLabel, 0, 3);
+        root.add(y_slider, 0, 4);
+
+        root.add(zSliderLabel, 0, 5);
+        root.add(z_slider, 0, 6);
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
         stage.show();
     }
-    public void Render(WritableImage image, int x) {
+    public void Render(WritableImage image, int x, int y, int z) {
         //Get image dimensions, and declare loop variables
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
@@ -100,7 +137,7 @@ public class Main extends Application {
         //Line
         Vector o = new Vector(0, 0, 0);
         Vector d = new Vector(0, 0, 1);
-        Vector cs = new Vector(x, 0, 0);
+        Vector cs = new Vector(x, y, z);
         double radius = 75;
         Vector p = new Vector(0, 0, 0);
         double t;
