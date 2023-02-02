@@ -44,9 +44,8 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    int Width = 640;
+    int Width = 1000;
     int Height = 640;
-    int green_col = 255; //just for the test example
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         stage.setTitle("Ray Tracing");
@@ -61,20 +60,30 @@ public class Main extends Application {
         x_slider.setShowTickLabels(true);
         x_slider.setShowTickMarks(true);
         x_slider.setMajorTickUnit(80);
-        //Add all the event handlers
 
         Slider y_slider = new Slider(0, 640, 320);
         y_slider.setShowTickLabels(true);
         y_slider.setShowTickMarks(true);
         y_slider.setMajorTickUnit(80);
-        //Add all the event handlers
 
         Slider z_slider = new Slider(0, 640, 320);
         z_slider.setShowTickLabels(true);
         z_slider.setShowTickMarks(true);
         z_slider.setMajorTickUnit(80);
-        //Add all the event handlers
 
+        Slider r_slider = new Slider(0, 255, 0);
+        r_slider.setShowTickLabels(true);
+        r_slider.setShowTickMarks(true);
+
+        Slider g_slider = new Slider(0, 255, 0);
+        g_slider.setShowTickLabels(true);
+        g_slider.setShowTickMarks(true);
+
+        Slider b_slider = new Slider(0, 255, 0);
+        b_slider.setShowTickLabels(true);
+        b_slider.setShowTickMarks(true);
+
+        //Add all the event handlers
         x_slider.valueProperty().addListener(
                 new ChangeListener < Number > () {
                     public void changed(ObservableValue < ? extends Number >
@@ -110,13 +119,15 @@ public class Main extends Application {
         });
         Render(image, x_slider.valueProperty().intValue(), y_slider.valueProperty().intValue(), z_slider.valueProperty().intValue());
         GridPane root = new GridPane();
-        root.setVgap(12);
-        root.setHgap(12);
+        root.setVgap(4);
         //3. (referring to the 3 things we need to display an image)
         //we need to add it to the pane
         Label xSliderLabel = new Label("X coord");
         Label ySliderLabel = new Label("Y coord");
         Label zSliderLabel = new Label("Z coord");
+        Label rSliderLabel = new Label("R");
+        Label gSliderLabel = new Label("G");
+        Label bSliderLabel = new Label("B");
 
         root.add(view, 0, 0);
         root.add(xSliderLabel, 0, 1);
@@ -127,6 +138,15 @@ public class Main extends Application {
 
         root.add(zSliderLabel, 0, 5);
         root.add(z_slider, 0, 6);
+
+        root.add(rSliderLabel, 0, 7);
+        root.add(r_slider, 0, 8);
+
+        root.add(gSliderLabel, 0, 9);
+        root.add(g_slider, 0, 10);
+
+        root.add(bSliderLabel, 0, 11);
+        root.add(b_slider, 0, 12);
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
@@ -149,7 +169,7 @@ public class Main extends Application {
         double a;
         double b;
         double c;
-        double col = 0.0;
+        double col;
 
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
