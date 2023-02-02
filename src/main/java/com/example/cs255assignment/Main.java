@@ -16,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -56,14 +57,17 @@ public class Main extends Application {
         ImageView view = new ImageView(image);
         //3. Add to the pane (below)
         //Create the simple GUI
-        Slider g_slider = new Slider(0, 255, green_col);
+        Slider x_slider = new Slider(0, 640, 320);
+        x_slider.setShowTickLabels(true);
+        x_slider.setShowTickMarks(true);
+        x_slider.setMajorTickUnit(80);
         //Add all the event handlers
-        g_slider.valueProperty().addListener(
+        x_slider.valueProperty().addListener(
                 new ChangeListener < Number > () {
                     public void changed(ObservableValue < ? extends Number >
                                                 observable, Number oldValue, Number newValue) {
-                        green_col = newValue.intValue();
-                        Render(image);
+                        int x = newValue.intValue();
+                        Render(image, x);
                     }
                 });
         //The following is in case you want to interact with the image in any way
@@ -73,20 +77,22 @@ public class Main extends Application {
             System.out.println(event.getX() + " " + event.getY());
             event.consume();
         });
-        Render(image);
+        Render(image, x_slider.valueProperty().intValue());
         GridPane root = new GridPane();
         root.setVgap(12);
         root.setHgap(12);
         //3. (referring to the 3 things we need to display an image)
         //we need to add it to the pane
+        Label xSliderLabel = new Label("X coord");
         root.add(view, 0, 0);
-        root.add(g_slider, 0, 1);
+        root.add(xSliderLabel, 0, 1);
+        root.add(x_slider, 0, 2);
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
         stage.show();
     }
-    public void Render(WritableImage image) {
+    public void Render(WritableImage image, int x) {
         //Get image dimensions, and declare loop variables
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
@@ -94,11 +100,11 @@ public class Main extends Application {
         //Line
         Vector o = new Vector(0, 0, 0);
         Vector d = new Vector(0, 0, 1);
-        Vector cs = new Vector(0, 0, 0);
+        Vector cs = new Vector(x, 0, 0);
         double radius = 75;
         Vector p = new Vector(0, 0, 0);
         double t;
-        Vector light = new Vector(250, 250, -250);
+        Vector light = new Vector(0, 0, -250);
         Vector v;
         double a;
         double b;
