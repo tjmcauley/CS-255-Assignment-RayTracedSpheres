@@ -62,40 +62,43 @@ public class Main extends Application {
         x_slider.setShowTickMarks(true);
         x_slider.setMajorTickUnit(80);
         //Add all the event handlers
-        x_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        int x = newValue.intValue();
 
-                        Render(image, x, 0, 0);
-                    }
-                });
         Slider y_slider = new Slider(0, 640, 320);
         y_slider.setShowTickLabels(true);
         y_slider.setShowTickMarks(true);
         y_slider.setMajorTickUnit(80);
         //Add all the event handlers
-        y_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        int y = newValue.intValue();
-                        
-                        Render(image, 0, y, 0);
-                    }
-                });
+
         Slider z_slider = new Slider(0, 640, 320);
         z_slider.setShowTickLabels(true);
         z_slider.setShowTickMarks(true);
         z_slider.setMajorTickUnit(80);
         //Add all the event handlers
+
+        x_slider.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int x = newValue.intValue();
+                        Render(image, x, y_slider.valueProperty().intValue(), z_slider.valueProperty().intValue());
+                    }
+                });
+
+        y_slider.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int y = newValue.intValue();
+                        Render(image, x_slider.valueProperty().intValue(), y, z_slider.valueProperty().intValue());
+                    }
+                });
+
         z_slider.valueProperty().addListener(
                 new ChangeListener < Number > () {
                     public void changed(ObservableValue < ? extends Number >
                                                 observable, Number oldValue, Number newValue) {
                         int z = newValue.intValue();
-                        Render(image, 0, 0, z);
+                        Render(image, x_slider.valueProperty().intValue(), y_slider.valueProperty().intValue(), z);
                     }
                 });
         //The following is in case you want to interact with the image in any way
