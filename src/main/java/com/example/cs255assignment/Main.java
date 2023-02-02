@@ -39,6 +39,9 @@ import java.io.*;
 import java.lang.Math.*;
 
 import javafx.geometry.HPos;
+
+import static java.lang.Math.sqrt;
+
 public class Main extends Application {
     int Width = 640;
     int Height = 640;
@@ -89,27 +92,53 @@ public class Main extends Application {
         PixelWriter image_writer = image.getPixelWriter();
 
         //Line
-        Vector o = new Vector(0.5, 0.5, 0.5);
+        Vector o = new Vector(0, 0, 0);
         Vector d = new Vector(0, 0, 1);
-        Vector cs = new Vector(320, 320, 0);
+        Vector cs = new Vector(0, 0, 0);
         double radius = 75;
+        Vector p = new Vector(0, 0, 0);
+        double t;
+        Vector light = new Vector(250, 250, -250);
+        Vector v;
+        double a;
+        double b;
+        double c;
+        double col = 0.0;
 
-        Vector col = new Vector(0.5, 0.5, 0.5);
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
                 //ray origin = (i, j, -4);
-                o = new Vector(i, j, -600);
-                Vector v = o.sub(cs);
-                double a = d.dot(d);
-                double b = v.dot(d) * 2;
-                double c = v.dot(v) - radius * radius;
+                o.x = i - 250;
+                o.y = j - 250;
+                o.z = -200;
+                v = o.sub(cs);
+                a = d.dot(d);
+                b = v.dot(d) * 2;
+                c = v.dot(v) - radius * radius;
                 double disc = b * b - 4 * a * c;
                 if (disc < 0) {
-                    col = new Vector(0, 0, 0);
+                    col = 0.0;
                 } else {
-                    col = new Vector(1, 0, 0);
+                    col = 1.0;
                 }
-                image_writer.setColor(i, j, Color.color(col.x, col.y, col.z, 1.0));
+                t = (-b - sqrt(disc)) / 2 * a;
+                p = o.add(d.mul(t));
+                Vector lv = light.sub(p);
+                lv.normalise();
+                Vector n = p.sub(cs);
+                n.normalise();
+                double dp = lv.dot(n);
+                if (dp < 0) {
+                    col = 0;
+                } else {
+                    col = dp;
+                }
+
+                if (col > 1) {
+                    col = 1;
+                }
+
+                image_writer.setColor(i, j, Color.color(col, col, col, 1.0));
             } // column loop
         } // row loop
     }
