@@ -3,6 +3,7 @@ package com.example.cs255assignment;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 
 import static java.lang.Math.sqrt;
 
@@ -64,7 +65,19 @@ public class Sphere {
         return this.z;
     }
 
+    public double getSphereR() {
+        return this.r / 255;
+    }
+
+    public double getSphereG() {
+        return this.g / 255;
+    }
+
+    public double getSphereB() {
+        return this.b / 255;
+    }
+
     public Color getSphereColour() {
-        return Color.color(r, g, b);
+        return Color.color(this.r / 255, this.g / 255, this.b / 255);
     }
 }

@@ -34,6 +34,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.io.*;
@@ -145,6 +146,7 @@ public class Main extends Application {
             System.out.println(event.getX() + " " + event.getY());
             event.consume();
         });
+
         Render(image, sphere);
         GridPane root = new GridPane();
         root.setVgap(4);
@@ -191,14 +193,16 @@ public class Main extends Application {
         Vector d = new Vector(0, 0, 1);
         Vector cs = new Vector(sphere.getSphereX(), sphere.getSphereY(), sphere.getSphereZ());
         double radius = 75;
-        Vector p = new Vector(0, 0, 0);
+        Vector p;
         double t;
         Vector light = new Vector(0, 0, -250);
         Vector v;
         double a;
         double b;
         double c;
-        double col;
+        double colR;
+        double colG;
+        double colB;
 
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
@@ -210,12 +214,20 @@ public class Main extends Application {
                 a = d.dot(d);
                 b = v.dot(d) * 2;
                 c = v.dot(v) - radius * radius;
+
+                //Calculates sphere
                 double disc = b * b - 4 * a * c;
                 if (disc < 0) {
-                    col = 0.0;
+                    colR = 0.0;
+                    colG = 0.0;
+                    colB = 0.0;
                 } else {
-                    col = 1.0;
+                    colR = sphere.getSphereR();
+                    colG = sphere.getSphereG();
+                    colB = sphere.getSphereB();
                 }
+
+                //Calculates shadows on sphere
                 t = (-b - sqrt(disc)) / 2 * a;
                 p = o.add(d.mul(t));
                 Vector lv = light.sub(p);
@@ -224,16 +236,16 @@ public class Main extends Application {
                 n.normalise();
                 double dp = lv.dot(n);
                 if (dp < 0) {
-                    col = 0;
+                    colR = 0.0;
+                    colG = 0.0;
+                    colB = 0.0;
                 } else {
-                    col = dp;
+                    colR = sphere.getSphereR() + dp;
+                    colG = sphere.getSphereG() + dp;
+                    colB = sphere.getSphereB() + dp;
                 }
+                image_writer.setColor(i, j, Color.color(colR, colG, colB, 1.0));
 
-                if (col > 1) {
-                    col = 1;
-                }
-
-                image_writer.setColor(i, j, Color.color(col, col, col, 1.0));
             } // column loop
         } // row loop
     }
