@@ -56,20 +56,20 @@ public class Main extends Application {
         ImageView view = new ImageView(image);
         //3. Add to the pane (below)
         //Create the simple GUI
-        Slider x_slider = new Slider(0, 640, 320);
+        Slider x_slider = new Slider(-250, 250, 0);
         x_slider.setShowTickLabels(true);
         x_slider.setShowTickMarks(true);
-        x_slider.setMajorTickUnit(80);
+        x_slider.setMajorTickUnit(25);
 
-        Slider y_slider = new Slider(0, 640, 320);
+        Slider y_slider = new Slider(-250, 250, 0);
         y_slider.setShowTickLabels(true);
         y_slider.setShowTickMarks(true);
-        y_slider.setMajorTickUnit(80);
+        y_slider.setMajorTickUnit(25);
 
-        Slider z_slider = new Slider(0, 640, 320);
+        Slider z_slider = new Slider(-250, 250, 0);
         z_slider.setShowTickLabels(true);
         z_slider.setShowTickMarks(true);
-        z_slider.setMajorTickUnit(80);
+        z_slider.setMajorTickUnit(25);
 
         Slider r_slider = new Slider(0, 255, 0);
         r_slider.setShowTickLabels(true);
