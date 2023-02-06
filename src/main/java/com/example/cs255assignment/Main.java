@@ -83,13 +83,14 @@ public class Main extends Application {
         b_slider.setShowTickLabels(true);
         b_slider.setShowTickMarks(true);
 
+        Sphere sphere = new Sphere();
         //Add all the event handlers
         x_slider.valueProperty().addListener(
                 new ChangeListener < Number > () {
                     public void changed(ObservableValue < ? extends Number >
                                                 observable, Number oldValue, Number newValue) {
-                        int x = newValue.intValue();
-                        Render(image, x, y_slider.valueProperty().intValue(), z_slider.valueProperty().intValue());
+                        sphere.setSphereX(newValue.intValue());
+                        Render(image, sphere);
                     }
                 });
 
@@ -97,8 +98,8 @@ public class Main extends Application {
                 new ChangeListener < Number > () {
                     public void changed(ObservableValue < ? extends Number >
                                                 observable, Number oldValue, Number newValue) {
-                        int y = newValue.intValue();
-                        Render(image, x_slider.valueProperty().intValue(), y, z_slider.valueProperty().intValue());
+                        sphere.setSphereY(newValue.intValue());
+                        Render(image, sphere);
                     }
                 });
 
@@ -106,8 +107,35 @@ public class Main extends Application {
                 new ChangeListener < Number > () {
                     public void changed(ObservableValue < ? extends Number >
                                                 observable, Number oldValue, Number newValue) {
-                        int z = newValue.intValue();
-                        Render(image, x_slider.valueProperty().intValue(), y_slider.valueProperty().intValue(), z);
+                        sphere.setSphereZ(newValue.intValue());
+                        Render(image, sphere);
+                    }
+                });
+        r_slider.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int r = newValue.intValue();
+                        sphere.setSphereR(r);
+                        Render(image, sphere);
+                    }
+                });
+        g_slider.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int g = newValue.intValue();
+                        sphere.setSphereG(g);
+                        Render(image, sphere);
+                    }
+                });
+        b_slider.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int b = newValue.intValue();
+                        sphere.setSphereB(b);
+                        Render(image, sphere);
                     }
                 });
         //The following is in case you want to interact with the image in any way
@@ -117,7 +145,7 @@ public class Main extends Application {
             System.out.println(event.getX() + " " + event.getY());
             event.consume();
         });
-        Render(image, x_slider.valueProperty().intValue(), y_slider.valueProperty().intValue(), z_slider.valueProperty().intValue());
+        Render(image, sphere);
         GridPane root = new GridPane();
         root.setVgap(4);
         //3. (referring to the 3 things we need to display an image)
@@ -152,7 +180,8 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    public void Render(WritableImage image, int x, int y, int z) {
+
+    public void Render(WritableImage image, Sphere sphere) {
         //Get image dimensions, and declare loop variables
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
@@ -160,7 +189,7 @@ public class Main extends Application {
         //Line
         Vector o = new Vector(0, 0, 0);
         Vector d = new Vector(0, 0, 1);
-        Vector cs = new Vector(x, y, z);
+        Vector cs = new Vector(sphere.getSphereX(), sphere.getSphereY(), sphere.getSphereZ());
         double radius = 75;
         Vector p = new Vector(0, 0, 0);
         double t;
