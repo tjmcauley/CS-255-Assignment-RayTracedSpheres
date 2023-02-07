@@ -9,14 +9,17 @@ assignment (i.e. ray tracing steps 1-7)
 All of those functions must be written by yourself
 You may use libraries to achieve a better GUI
 */
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -38,6 +41,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.io.*;
 import java.lang.Math.*;
@@ -47,8 +51,11 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    int Width = 250;
-    int Height = 250;
+    int Width = 500;
+    int Height = 500;
+    ArrayList<Sphere> spheres = new ArrayList<>();
+    ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
+
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         stage.setTitle("Ray Tracing");
@@ -86,70 +93,6 @@ public class Main extends Application {
         b_slider.setShowTickLabels(true);
         b_slider.setShowTickMarks(true);
 
-        Sphere sphere = new Sphere();
-        //Add all the event handlers
-        x_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        sphere.setSphereX(newValue.intValue());
-                        Render(image, sphere);
-                    }
-                });
-
-        y_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        sphere.setSphereY(newValue.intValue());
-                        Render(image, sphere);
-                    }
-                });
-
-        z_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        sphere.setSphereZ(newValue.intValue());
-                        Render(image, sphere);
-                    }
-                });
-        r_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        int r = newValue.intValue();
-                        sphere.setSphereR(r);
-                        Render(image, sphere);
-                    }
-                });
-        g_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        int g = newValue.intValue();
-                        sphere.setSphereG(g);
-                        Render(image, sphere);
-                    }
-                });
-        b_slider.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
-                                                observable, Number oldValue, Number newValue) {
-                        int b = newValue.intValue();
-                        sphere.setSphereB(b);
-                        Render(image, sphere);
-                    }
-                });
-        //The following is in case you want to interact with the image in any way
-        //e.g., for user interaction, or you can find out the pixel position for
-        //debugging
-        view.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
-            System.out.println(event.getX() + " " + event.getY());
-            event.consume();
-        });
-
-        Render(image, sphere);
         GridPane root = new GridPane();
         root.setVgap(4);
         //3. (referring to the 3 things we need to display an image)
@@ -167,6 +110,7 @@ public class Main extends Application {
         FlowPane selectSphereLocation = new FlowPane();
         selectSphereLocation.setAlignment(Pos.TOP_CENTER);
         selectSphereLocation.setPrefWrapLength(340);
+        ToggleGroup tg = new ToggleGroup();
         root.add(selectSphereLocation, 2, 0);
 
         root.add(view, 0, 0);
@@ -188,17 +132,116 @@ public class Main extends Application {
         root.add(bSliderLabel, 0, 11);
         root.add(b_slider, 0, 12);
 
+        createSphereButton.setOnAction(e -> {
+            sphereSelectButtons.add(new RadioButton());
+            spheres.add(new Sphere(0, 0, 0, 255, 255, 255, 75));
+            for (int i = 0; i < spheres.size(); i++) {
+                if (!spheres.get(i).isLinked()) {
+                    spheres.get(i).setRadioButton(sphereSelectButtons.get(i));
+                    selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(i), new TextField("New Sphere"));
+                    Render(image);
+                }
+            }
+            for (RadioButton elem : sphereSelectButtons) {
+                elem.setToggleGroup(tg);
+            }
+        });
+
+        tg.selectedToggleProperty().addListener(
+                new ChangeListener<Toggle>() {
+                    public void changed(ObservableValue<? extends Toggle>
+                                                observable, Toggle oldValue, Toggle newValue) {
+                        RadioButton sphereSelector = (RadioButton) tg.getSelectedToggle();
+                            if (sphereSelector != null) {
+                                for (Sphere elem : spheres) {
+                                    if (elem.getLinkedButton().equals(sphereSelector))
+                                    elem.setSelect(true);
+                                }
+                            } else if (sphereSelector == null ) {
+                                for (Sphere elem : spheres) {
+                                    if (elem.getLinkedButton().equals(sphereSelector))
+                                        elem.setSelect(false);
+                                }
+                            }
+                        }
+                });
+
+        //Add all the event handlers
+        x_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+                        for (Sphere elem : spheres) {
+                            if (elem.isSelected()) {
+                                elem.setSphereX(newValue.intValue());
+                            }
+                            Render(image);
+                        }
+                    }
+                });
+//
+//        y_slider.valueProperty().addListener(
+//                new ChangeListener<Number>() {
+//                    public void changed(ObservableValue<? extends Number>
+//                                                observable, Number oldValue, Number newValue) {
+//                        sphere.setSphereY(newValue.intValue());
+//                        Render(image, sphere);
+//                    }
+//                });
+//
+//        z_slider.valueProperty().addListener(
+//                new ChangeListener<Number>() {
+//                    public void changed(ObservableValue<? extends Number>
+//                                                observable, Number oldValue, Number newValue) {
+//                        sphere.setSphereZ(newValue.intValue());
+//                        Render(image, sphere);
+//                    }
+//                });
+//        r_slider.valueProperty().addListener(
+//                new ChangeListener<Number>() {
+//                    public void changed(ObservableValue<? extends Number>
+//                                                observable, Number oldValue, Number newValue) {
+//                        int r = newValue.intValue();
+//                        sphere.setSphereR(r);
+//                        Render(image, sphere);
+//                    }
+//                });
+//        g_slider.valueProperty().addListener(
+//                new ChangeListener<Number>() {
+//                    public void changed(ObservableValue<? extends Number>
+//                                                observable, Number oldValue, Number newValue) {
+//                        int g = newValue.intValue();
+//                        sphere.setSphereG(g);
+//                        Render(image, sphere);
+//                    }
+//                });
+//        b_slider.valueProperty().addListener(
+//                new ChangeListener<Number>() {
+//                    public void changed(ObservableValue<? extends Number>
+//                                                observable, Number oldValue, Number newValue) {
+//                        int b = newValue.intValue();
+//                        sphere.setSphereB(b);
+//                        Render(image, sphere);
+//                    }
+//                });
+
+        //The following is in case you want to interact with the image in any way
+        //e.g., for user interaction, or you can find out the pixel position for
+        //debugging
+        view.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
+            System.out.println(event.getX() + " " + event.getY());
+            event.consume();
+        });
+
+        Render(image);
+
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
         stage.show();
-
-        createSphereButton.setOnAction(e -> {
-            selectSphereLocation.getChildren().addAll(new RadioButton(), new TextField("New Sphere"));
-        });
     }
 
-    public void Render(WritableImage image, Sphere sphere) {
+    public void Render(WritableImage image) {
         //Get image dimensions, and declare loop variables
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
@@ -206,8 +249,6 @@ public class Main extends Application {
         //Line
         Vector o = new Vector(0, 0, 0);
         Vector d = new Vector(0, 0, 1);
-        Vector cs = new Vector(sphere.getSphereX(), sphere.getSphereY(), sphere.getSphereZ());
-        double radius = 75;
         Vector p;
         double t;
         Vector light = new Vector(0, 0, -250);
@@ -220,42 +261,47 @@ public class Main extends Application {
             for (i = 0; i < w; i++) {
                 //Another for loop going through each sphere
                 //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
-                o.x = i - 250;
-                o.y = j - 250;
-                o.z = -200;
-                v = o.sub(cs);
-                a = d.dot(d);
-                b = v.dot(d) * 2;
-                c = v.dot(v) - radius * radius;
+                for (int s = 0; s < spheres.size(); s++) {
+                    Vector cs = new Vector(spheres.get(s).getSphereX(), spheres.get(s).getSphereY(), spheres.get(s).getSphereZ());
+                    o.x = i - 250;
+                    o.y = j - 250;
+                    o.z = -200;
+                    v = o.sub(cs);
+                    a = d.dot(d);
+                    b = v.dot(d) * 2;
+                    c = v.dot(v) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
 
-                double disc = b * b - 4 * a * c;
-                //Does light hit sphere?
-                if (disc < 0) {
-                    col = Color.color(0, 0, 0, 1);
-                } else {
-                    col = sphere.getSphereColour();
-                }
+                    double disc = b * b - 4 * a * c;
+                    //Does light hit sphere?
+                    if (disc < 0) {
+                        col = Color.color(0, 0, 0, 1);
+                    } else {
+                        col = spheres.get(s).getSphereColour();
+                    }
 
-                //Shading of light on sphere
-                t = (-b - sqrt(disc)) / 2 * a;
-                p = o.add(d.mul(t));
-                Vector lv = light.sub(p);
-                lv.normalise();
-                Vector n = p.sub(cs);
-                n.normalise();
-                double dp = lv.dot(n);
-                if (dp < 0) {
-                    col = Color.color(0, 0, 0, 1);
-                } else {
-                    double sphereShadedR = dp * sphere.getSphereR();
-                    double sphereShadedG = dp * sphere.getSphereG();
-                    double sphereShadedB = dp * sphere.getSphereB();
-                    col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
+                    //Shading of light on sphere
+                    //NEED TO FIND SMALLEST VALUE OF T FOR CORRECT SHADING
+                    t = (-b - sqrt(disc)) / 2 * a;
+                    p = o.add(d.mul(t));
+                    Vector lv = light.sub(p);
+                    lv.normalise();
+                    Vector n = p.sub(cs);
+                    n.normalise();
+                    double dp = lv.dot(n);
+                    if (dp < 0) {
+                        col = Color.color(0, 0, 0, 1);
+                    } else {
+                        double sphereShadedR = dp * spheres.get(s).getSphereR();
+                        double sphereShadedG = dp * spheres.get(s).getSphereG();
+                        double sphereShadedB = dp * spheres.get(s).getSphereB();
+                        col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
+                    }
+                    image_writer.setColor(i, j, col);
                 }
-                image_writer.setColor(i, j, col);
             } // column loop
         } // row loop
     }
+
     public static void main(String[] args) {
         launch();
     }
