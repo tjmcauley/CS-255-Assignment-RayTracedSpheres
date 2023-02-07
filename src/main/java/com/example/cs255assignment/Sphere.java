@@ -64,7 +64,19 @@ public class Sphere {
         return this.z;
     }
 
+    public double getSphereR() {
+        return this.r / 255;
+    }
+
+    public double getSphereG() {
+        return this.g / 255;
+    }
+
+    public double getSphereB() {
+        return this.b / 255;
+    }
+
     public Color getSphereColour() {
-        return Color.color(r, g, b);
+        return Color.color(r / 255, g / 255, b / 255);
     }
 }

@@ -44,8 +44,8 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    int Width = 1000;
-    int Height = 640;
+    int Width = 250;
+    int Height = 250;
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         stage.setTitle("Ray Tracing");
@@ -198,7 +198,7 @@ public class Main extends Application {
         double a;
         double b;
         double c;
-        double col;
+        Color col;
 
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
@@ -211,11 +211,14 @@ public class Main extends Application {
                 b = v.dot(d) * 2;
                 c = v.dot(v) - radius * radius;
                 double disc = b * b - 4 * a * c;
+                //Does light hit sphere?
                 if (disc < 0) {
-                    col = 0.0;
+                    col = Color.color(0, 0, 0, 1);
                 } else {
-                    col = 1.0;
+                    col = sphere.getSphereColour();
                 }
+
+                //Shading of light on sphere
                 t = (-b - sqrt(disc)) / 2 * a;
                 p = o.add(d.mul(t));
                 Vector lv = light.sub(p);
@@ -224,16 +227,17 @@ public class Main extends Application {
                 n.normalise();
                 double dp = lv.dot(n);
                 if (dp < 0) {
-                    col = 0;
+                    col = Color.color(0, 0, 0, 1);
                 } else {
-                    col = dp;
+                    double sphereShadedR = dp * sphere.getSphereR();
+                    double sphereShadedG = dp * sphere.getSphereG();
+                    double sphereShadedB = dp * sphere.getSphereB();
+                    col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
                 }
 
-                if (col > 1) {
-                    col = 1;
-                }
 
-                image_writer.setColor(i, j, Color.color(col, col, col, 1.0));
+
+                image_writer.setColor(i, j, col);
             } // column loop
         } // row loop
     }
