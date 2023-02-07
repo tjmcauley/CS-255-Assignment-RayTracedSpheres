@@ -17,12 +17,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.Slider;
@@ -156,7 +158,14 @@ public class Main extends Application {
         Label rSliderLabel = new Label("R");
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
-        Button sphereButton = new Button("Create Sphere");
+
+        Button createSphereButton = new Button("Create Sphere");
+        root.add(createSphereButton, 1, 0);
+
+        FlowPane selectSphereLocation = new FlowPane();
+        selectSphereLocation.setAlignment(Pos.TOP_CENTER);
+        selectSphereLocation.setPrefWrapLength(340);
+        root.add(selectSphereLocation, 2, 0);
 
         root.add(view, 0, 0);
         root.add(xSliderLabel, 0, 1);
@@ -177,11 +186,14 @@ public class Main extends Application {
         root.add(bSliderLabel, 0, 11);
         root.add(b_slider, 0, 12);
 
-
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
         stage.show();
+
+        createSphereButton.setOnAction(e -> {
+            selectSphereLocation.getChildren().addAll(new RadioButton(), new TextField("New Sphere"));
+        });
     }
 
     public void Render(WritableImage image, Sphere sphere) {
@@ -205,7 +217,8 @@ public class Main extends Application {
 
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
-                //ray origin = (i, j, -4);
+                //Another for loop going through each sphere
+                //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
                 o.x = i - 250;
                 o.y = j - 250;
                 o.z = -200;
