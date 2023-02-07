@@ -156,6 +156,7 @@ public class Main extends Application {
         Label rSliderLabel = new Label("R");
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
+        Button sphereButton = new Button("Create Sphere");
 
         root.add(view, 0, 0);
         root.add(xSliderLabel, 0, 1);
@@ -175,6 +176,8 @@ public class Main extends Application {
 
         root.add(bSliderLabel, 0, 11);
         root.add(b_slider, 0, 12);
+
+
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
@@ -234,9 +237,6 @@ public class Main extends Application {
                     double sphereShadedB = dp * sphere.getSphereB();
                     col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
                 }
-
-
-
                 image_writer.setColor(i, j, col);
             } // column loop
         } // row loop
