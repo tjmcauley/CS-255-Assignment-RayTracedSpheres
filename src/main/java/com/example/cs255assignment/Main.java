@@ -45,8 +45,8 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    int Width = 1000;
-    int Height = 640;
+    int Width = 250;
+    int Height = 250;
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         stage.setTitle("Ray Tracing");
@@ -158,6 +158,7 @@ public class Main extends Application {
         Label rSliderLabel = new Label("R");
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
+        Button sphereButton = new Button("Create Sphere");
 
         root.add(view, 0, 0);
         root.add(xSliderLabel, 0, 1);
@@ -177,6 +178,8 @@ public class Main extends Application {
 
         root.add(bSliderLabel, 0, 11);
         root.add(b_slider, 0, 12);
+
+
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
@@ -200,10 +203,7 @@ public class Main extends Application {
         double a;
         double b;
         double c;
-        double colR;
-        double colG;
-        double colB;
-
+        Color col;
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
                 //ray origin = (i, j, -4);
@@ -215,19 +215,15 @@ public class Main extends Application {
                 b = v.dot(d) * 2;
                 c = v.dot(v) - radius * radius;
 
-                //Calculates sphere
                 double disc = b * b - 4 * a * c;
+                //Does light hit sphere?
                 if (disc < 0) {
-                    colR = 0.0;
-                    colG = 0.0;
-                    colB = 0.0;
+                    col = Color.color(0, 0, 0, 1);
                 } else {
-                    colR = sphere.getSphereR();
-                    colG = sphere.getSphereG();
-                    colB = sphere.getSphereB();
+                    col = sphere.getSphereColour();
                 }
 
-                //Calculates shadows on sphere
+                //Shading of light on sphere
                 t = (-b - sqrt(disc)) / 2 * a;
                 p = o.add(d.mul(t));
                 Vector lv = light.sub(p);
@@ -236,16 +232,14 @@ public class Main extends Application {
                 n.normalise();
                 double dp = lv.dot(n);
                 if (dp < 0) {
-                    colR = 0.0;
-                    colG = 0.0;
-                    colB = 0.0;
+                    col = Color.color(0, 0, 0, 1);
                 } else {
-                    colR = sphere.getSphereR() + dp;
-                    colG = sphere.getSphereG() + dp;
-                    colB = sphere.getSphereB() + dp;
+                    double sphereShadedR = dp * sphere.getSphereR();
+                    double sphereShadedG = dp * sphere.getSphereG();
+                    double sphereShadedB = dp * sphere.getSphereB();
+                    col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
                 }
-                image_writer.setColor(i, j, Color.color(colR, colG, colB, 1.0));
-
+                image_writer.setColor(i, j, col);
             } // column loop
         } // row loop
     }
