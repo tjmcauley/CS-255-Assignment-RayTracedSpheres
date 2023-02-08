@@ -151,19 +151,15 @@ public class Main extends Application {
                 new ChangeListener<Toggle>() {
                     public void changed(ObservableValue<? extends Toggle>
                                                 observable, Toggle oldValue, Toggle newValue) {
-                        RadioButton sphereSelector = (RadioButton) tg.getSelectedToggle();
-                            if (sphereSelector != null) {
-                                for (Sphere elem : spheres) {
-                                    if (elem.getLinkedButton().equals(sphereSelector))
-                                    elem.setSelect(true);
-                                }
-                            } else if (sphereSelector == null ) {
-                                for (Sphere elem : spheres) {
-                                    if (elem.getLinkedButton().equals(sphereSelector))
-                                        elem.setSelect(false);
-                                }
+                        for (Sphere elem : spheres) {
+                            RadioButton selectedSphere = elem.getLinkedButton();
+                            if (selectedSphere.isSelected()) {
+                                elem.setSelect(true);
+                            } else {
+                                elem.setSelect(false);
                             }
                         }
+                    }
                 });
 
         //Add all the event handlers
