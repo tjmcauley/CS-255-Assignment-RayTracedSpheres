@@ -277,13 +277,15 @@ public class Main extends Application {
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
 
-        //Line
-        Vector o = new Vector(0, 0, 0);
-        Vector d = new Vector(0, 0, 1);
-        Vector p;
-        double t;
+        //Variables for calculating which parts of the spheres to render
+        Vector rayOrigin = new Vector(0, 0, 0);
+        Vector rayDirection = new Vector(0, 0, 1);
+        Vector points;
+        double lineIntersectionWithSphere;
         Vector light = new Vector(0, 0, -250);
-        Vector v;
+        Vector rayFromCenterOfSphereToOriginOfLine;
+
+        //a, b, and c components of quadratic equation
         double a;
         double b;
         double c;
@@ -293,30 +295,29 @@ public class Main extends Application {
                 //Another for loop going through each sphere
                 //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
                 for (int s = 0; s < spheres.size(); s++) {
-                    Vector cs = new Vector(spheres.get(s).getSphereX(), spheres.get(s).getSphereY(), spheres.get(s).getSphereZ());
-                    o.x = i - 250;
-                    o.y = j - 250;
-                    o.z = -200;
-                    v = o.sub(cs);
-                    a = d.dot(d);
-                    b = v.dot(d) * 2;
-                    c = v.dot(v) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
+                    rayOrigin.x = i - 250;
+                    rayOrigin.y = j - 250;
+                    rayOrigin.z = -200;
+                    rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(spheres.get(s));
+                    a = rayDirection.dot(rayDirection);
+                    b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
+                    c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
 
+                    //Calculate if light hits sphere
                     double disc = b * b - 4 * a * c;
-                    //Does light hit sphere?
                     if (disc < 0) {
                         col = Color.color(0, 0, 0, 1);
                     } else {
                         col = spheres.get(s).getSphereColour();
                     }
 
-                    //Shading of light on sphere
+                    //Calculate shading of light on sphere
                     //NEED TO FIND SMALLEST VALUE OF T FOR CORRECT SHADING
-                    t = (-b - sqrt(disc)) / 2 * a;
-                    p = o.add(d.mul(t));
-                    Vector lv = light.sub(p);
+                    lineIntersectionWithSphere = (-b - sqrt(disc)) / 2 * a;
+                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
+                    Vector lv = light.sub(points);
                     lv.normalise();
-                    Vector n = p.sub(cs);
+                    Vector n = points.sub(spheres.get(s));
                     n.normalise();
                     double dp = lv.dot(n);
                     if (dp < 0) {

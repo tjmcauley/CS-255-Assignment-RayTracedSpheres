@@ -8,11 +8,7 @@ import javafx.scene.paint.Material;
 
 import static java.lang.Math.sqrt;
 
-public class Sphere {
-
-    private int x;
-    private int y;
-    private int z;
+public class Sphere extends Vector{
     private double r;
     private double g;
     private double b;
@@ -24,9 +20,9 @@ public class Sphere {
     }
 
     public Sphere(int x, int y, int z, double r, double g, double b) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        super.x = x;
+        super.y = y;
+        super.z = z;
         this.r = r;
         this.g = g;
         this.b = b;
@@ -69,16 +65,16 @@ public class Sphere {
         this.selected = selected;
     }
 
-    public int getSphereX() {
-        return this.x;
+    public double getSphereX() {
+        return super.x;
     }
 
-    public int getSphereY() {
-        return this.y;
+    public double getSphereY() {
+        return super.y;
     }
 
-    public int getSphereZ() {
-        return this.z;
+    public double getSphereZ() {
+        return super.z;
     }
 
     public double getSphereR() {
