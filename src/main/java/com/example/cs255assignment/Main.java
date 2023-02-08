@@ -51,8 +51,8 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    int Width = 500;
-    int Height = 500;
+    int Width = 250;
+    int Height = 250;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
 
@@ -134,7 +134,7 @@ public class Main extends Application {
 
         createSphereButton.setOnAction(e -> {
             sphereSelectButtons.add(new RadioButton());
-            spheres.add(new Sphere(0, 0, 0, 255, 255, 255, 75));
+            spheres.add(new Sphere());
             for (int i = 0; i < spheres.size(); i++) {
                 if (!spheres.get(i).isLinked()) {
                     spheres.get(i).setRadioButton(sphereSelectButtons.get(i));
@@ -168,58 +168,77 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
-                            if (elem.isSelected()) {
+                            if (elem.isSelected() != null) {
                                 elem.setSphereX(newValue.intValue());
                             }
                             Render(image);
                         }
                     }
                 });
-//
-//        y_slider.valueProperty().addListener(
-//                new ChangeListener<Number>() {
-//                    public void changed(ObservableValue<? extends Number>
-//                                                observable, Number oldValue, Number newValue) {
-//                        sphere.setSphereY(newValue.intValue());
-//                        Render(image, sphere);
-//                    }
-//                });
-//
-//        z_slider.valueProperty().addListener(
-//                new ChangeListener<Number>() {
-//                    public void changed(ObservableValue<? extends Number>
-//                                                observable, Number oldValue, Number newValue) {
-//                        sphere.setSphereZ(newValue.intValue());
-//                        Render(image, sphere);
-//                    }
-//                });
-//        r_slider.valueProperty().addListener(
-//                new ChangeListener<Number>() {
-//                    public void changed(ObservableValue<? extends Number>
-//                                                observable, Number oldValue, Number newValue) {
-//                        int r = newValue.intValue();
-//                        sphere.setSphereR(r);
-//                        Render(image, sphere);
-//                    }
-//                });
-//        g_slider.valueProperty().addListener(
-//                new ChangeListener<Number>() {
-//                    public void changed(ObservableValue<? extends Number>
-//                                                observable, Number oldValue, Number newValue) {
-//                        int g = newValue.intValue();
-//                        sphere.setSphereG(g);
-//                        Render(image, sphere);
-//                    }
-//                });
-//        b_slider.valueProperty().addListener(
-//                new ChangeListener<Number>() {
-//                    public void changed(ObservableValue<? extends Number>
-//                                                observable, Number oldValue, Number newValue) {
-//                        int b = newValue.intValue();
-//                        sphere.setSphereB(b);
-//                        Render(image, sphere);
-//                    }
-//                });
+
+        y_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+                        for (Sphere elem : spheres) {
+                            if (elem.isSelected() != null) {
+                                elem.setSphereY(newValue.intValue());
+                            }
+                            Render(image);
+                        }
+                    }
+                });
+
+        z_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+                        for (Sphere elem : spheres) {
+                            if (elem.isSelected() != null) {
+                                elem.setSphereZ(newValue.intValue());
+                            }
+                            Render(image);
+                        }
+                    }
+                });
+        r_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+                        for (Sphere elem : spheres) {
+                            if (elem.isSelected() != null) {
+                                elem.setSphereR(newValue.intValue());
+                            } else {
+                                Render(image);
+                            }
+                            Render(image);
+                        }
+                    }
+                });
+        g_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+                        for (Sphere elem : spheres) {
+                            if (elem.isSelected() != null) {
+                                elem.setSphereG(newValue.intValue());
+                            }
+                            Render(image);
+                        }
+                    }
+                });
+        b_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+                        for (Sphere elem : spheres) {
+                            if (elem.isSelected() != null) {
+                                elem.setSphereB(newValue.intValue());
+                            }
+                            Render(image);
+                        }
+                    }
+                });
 
         //The following is in case you want to interact with the image in any way
         //e.g., for user interaction, or you can find out the pixel position for

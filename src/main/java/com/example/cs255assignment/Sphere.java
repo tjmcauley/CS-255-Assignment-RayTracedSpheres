@@ -16,21 +16,20 @@ public class Sphere {
     private double r;
     private double g;
     private double b;
-    private double radius;
+    private double radius = 75;
     private RadioButton radioButton;
     private Boolean selected;
 
     public Sphere() {
     }
 
-    public Sphere(int x, int y, int z, double r, double g, double b, double radius) {
+    public Sphere(int x, int y, int z, double r, double g, double b) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.r = r;
         this.g = g;
         this.b = b;
-        this.radius = radius;
         this.selected = false;
     }
 
