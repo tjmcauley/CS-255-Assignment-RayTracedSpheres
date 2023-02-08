@@ -135,16 +135,10 @@ public class Main extends Application {
         createSphereButton.setOnAction(e -> {
             sphereSelectButtons.add(new RadioButton());
             spheres.add(new Sphere());
-            for (int i = 0; i < spheres.size(); i++) {
-                if (!spheres.get(i).isLinked()) {
-                    spheres.get(i).setRadioButton(sphereSelectButtons.get(i));
-                    selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(i), new TextField("New Sphere"));
-                    Render(image);
-                }
-            }
-            for (RadioButton elem : sphereSelectButtons) {
-                elem.setToggleGroup(tg);
-            }
+            spheres.get(spheres.size() - 1).setRadioButton(sphereSelectButtons.get(sphereSelectButtons.size() - 1));
+            selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(sphereSelectButtons.size() - 1), new TextField("New Sphere"));
+            sphereSelectButtons.get(sphereSelectButtons.size() - 1).setToggleGroup(tg);
+            Render(image);
         });
 
         tg.selectedToggleProperty().addListener(
@@ -168,8 +162,12 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
-                            if (elem.isSelected() != null) {
-                                elem.setSphereX(newValue.intValue());
+                            try {
+                                if (elem.isSelected()) {
+                                    elem.setSphereX(newValue.intValue());
+                                }
+                            } catch (NullPointerException e) {
+                                System.out.println("Select a sphere to manipulate");
                             }
                             Render(image);
                         }
@@ -181,8 +179,12 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
-                            if (elem.isSelected() != null) {
-                                elem.setSphereY(newValue.intValue());
+                            try {
+                                if (elem.isSelected()) {
+                                    elem.setSphereY(newValue.intValue());
+                                }
+                            } catch (NullPointerException e) {
+                                System.out.println("Select a sphere to manipulate");
                             }
                             Render(image);
                         }
@@ -194,8 +196,12 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
-                            if (elem.isSelected() != null) {
-                                elem.setSphereZ(newValue.intValue());
+                            try {
+                                if (elem.isSelected()) {
+                                    elem.setSphereZ(newValue.intValue());
+                                }
+                            } catch (NullPointerException e) {
+                                System.out.println("Select a sphere to manipulate");
                             }
                             Render(image);
                         }
@@ -206,10 +212,12 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
-                            if (elem.isSelected() != null) {
-                                elem.setSphereR(newValue.intValue());
-                            } else {
-                                Render(image);
+                            try {
+                                if (elem.isSelected()) {
+                                    elem.setSphereR(newValue.intValue());
+                                }
+                            } catch (NullPointerException e) {
+                                System.out.println("Select a sphere to manipulate");
                             }
                             Render(image);
                         }
@@ -220,8 +228,12 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
-                            if (elem.isSelected() != null) {
-                                elem.setSphereG(newValue.intValue());
+                            try {
+                                if (elem.isSelected()) {
+                                    elem.setSphereG(newValue.intValue());
+                                }
+                            } catch (NullPointerException e) {
+                                System.out.println("Select a sphere to manipulate");
                             }
                             Render(image);
                         }
@@ -232,8 +244,12 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
-                            if (elem.isSelected() != null) {
-                                elem.setSphereB(newValue.intValue());
+                            try {
+                                if (elem.isSelected()) {
+                                    elem.setSphereB(newValue.intValue());
+                                }
+                            } catch (NullPointerException e) {
+                                System.out.println("Select a sphere to manipulate");
                             }
                             Render(image);
                         }
