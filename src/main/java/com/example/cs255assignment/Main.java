@@ -85,6 +85,12 @@ public class Main extends Application {
         b_slider.setShowTickLabels(true);
         b_slider.setShowTickMarks(true);
 
+        Slider radius = new Slider(0, 10, 0);
+        radius.setShowTickLabels(true);
+        radius.setShowTickMarks(true);
+        radius.setMajorTickUnit(2);
+        radius.setMinorTickCount(1);
+
         Sphere sphere = new Sphere();
         //Add all the event handlers
         x_slider.valueProperty().addListener(
@@ -131,6 +137,7 @@ public class Main extends Application {
                         Render(image, sphere);
                     }
                 });
+
         b_slider.valueProperty().addListener(
                 new ChangeListener < Number > () {
                     public void changed(ObservableValue < ? extends Number >
@@ -140,6 +147,19 @@ public class Main extends Application {
                         Render(image, sphere);
                     }
                 });
+
+
+        radius.valueProperty().addListener(
+                new ChangeListener < Number > () {
+                    public void changed(ObservableValue < ? extends Number >
+                                                observable, Number oldValue, Number newValue) {
+                        int b = newValue.intValue();
+                        sphere.setSphereRadius(b);
+                        Render(image, sphere);
+                    }
+                });
+
+
         //The following is in case you want to interact with the image in any way
         //e.g., for user interaction, or you can find out the pixel position for
         //debugging
@@ -158,6 +178,7 @@ public class Main extends Application {
         Label rSliderLabel = new Label("R");
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
+        Label radiusSliderLabel = new Label("radius");
 
         Button createSphereButton = new Button("Create Sphere");
         root.add(createSphereButton, 1, 0);
@@ -185,6 +206,10 @@ public class Main extends Application {
 
         root.add(bSliderLabel, 0, 11);
         root.add(b_slider, 0, 12);
+
+        root.add(radiusSliderLabel, 0, 13);
+        root.add(radius, 0, 14);
+
 
         //Display to user
         Scene scene = new Scene(root, 1024, 768);

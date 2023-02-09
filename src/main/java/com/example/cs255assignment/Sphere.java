@@ -14,19 +14,24 @@ public class Sphere {
     private double r;
     private double g;
     private double b;
+    private int radius;
 
     public Sphere() {
 
     }
 
-    public Sphere(int x, int y, int z, double r, double g, double b) {
+    public Sphere(int x, int y, int z, double r, double g, double b, int radius) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.r = r;
         this.g = g;
         this.b = b;
+        this.radius = radius;
+
     }
+
+
 
     public void setSphereX(int x) {
         this.x = x;
@@ -50,6 +55,14 @@ public class Sphere {
 
     public void setSphereB(double b) {
         this.b = b;
+    }
+
+    public void setSphereRadius(int radius){
+        this.radius = radius;
+    }
+
+    public int getRadius(){
+        return this.radius;
     }
 
     public int getSphereX() {
