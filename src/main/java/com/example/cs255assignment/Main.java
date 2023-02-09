@@ -273,7 +273,7 @@ public class Main extends Application {
                         for (Sphere elem : spheres) {
                             try {
                                 if (elem.isSelected()) {
-                                    elem.setSphereB(newValue.intValue());
+                                    elem.setSphereRadius(newValue.intValue());
                                 }
                             } catch (NullPointerException e) {
                                 System.out.println("Select a sphere to manipulate");
