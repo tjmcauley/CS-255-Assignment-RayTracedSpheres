@@ -1,23 +1,22 @@
 package com.example.cs255assignment;
 
+import javafx.scene.control.RadioButton;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 
 import static java.lang.Math.sqrt;
 
-public class Sphere {
-
-    private int x;
-    private int y;
-    private int z;
+public class Sphere extends Vector{
     private double r;
     private double g;
     private double b;
     private int radius;
+    private RadioButton radioButton;
+    private Boolean selected;
 
     public Sphere() {
-
     }
 
     public Sphere(int x, int y, int z, double r, double g, double b, int radius) {
@@ -28,10 +27,8 @@ public class Sphere {
         this.g = g;
         this.b = b;
         this.radius = radius;
-
+        this.selected = false;
     }
-
-
 
     public void setSphereX(int x) {
         this.x = x;
@@ -61,20 +58,28 @@ public class Sphere {
         this.radius = radius;
     }
 
-    public int getRadius(){
+    public void setRadioButton(RadioButton radioButton) {
+        this.radioButton = radioButton;
+    }
+
+    public void setSelect(Boolean selected) {
+        this.selected = selected;
+    }
+
+    public int getSphereRadius(){
         return this.radius;
     }
 
-    public int getSphereX() {
-        return this.x;
+    public double getSphereX() {
+        return super.x;
     }
 
-    public int getSphereY() {
-        return this.y;
+    public double getSphereY() {
+        return super.y;
     }
 
-    public int getSphereZ() {
-        return this.z;
+    public double getSphereZ() {
+        return super.z;
     }
 
     public double getSphereR() {
@@ -90,6 +95,25 @@ public class Sphere {
     }
 
     public Color getSphereColour() {
-        return Color.color(r / 255, g / 255, b / 255);
+        return Color.color(this.r / 255, this.g / 255, this.b / 255);
+    }
+
+    public double getRadius() {
+        return this.radius;
+    }
+
+    public RadioButton getLinkedButton() {
+        return this.radioButton;
+    }
+
+    public Boolean isLinked() {
+        if (this.radioButton == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean isSelected() {
+        return this.selected;
     }
 }
