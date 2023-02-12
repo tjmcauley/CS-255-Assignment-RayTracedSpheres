@@ -93,7 +93,7 @@ public class Main extends Application {
         b_slider.setShowTickLabels(true);
         b_slider.setShowTickMarks(true);
 
-        Slider radius = new Slider(0, 10, 0);
+        Slider radius = new Slider(0, 100, 0);
         radius.setShowTickLabels(true);
         radius.setShowTickMarks(true);
         radius.setMajorTickUnit(2);
