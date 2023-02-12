@@ -15,6 +15,7 @@ public class Sphere extends Vector{
     private int radius;
     private RadioButton radioButton;
     private Boolean selected;
+    Boolean beenSelected ;
 
     public Sphere() {
 
@@ -114,7 +115,14 @@ public class Sphere extends Vector{
         return true;
     }
 
+    public void setBeenSelected(Boolean s){
+        this.beenSelected = s;
+    }
+
     public Boolean isSelected() {
+        return this.selected;
+    }
+    public Boolean getBeenSelected() {
         return this.selected;
     }
 }

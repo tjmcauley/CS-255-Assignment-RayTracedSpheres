@@ -144,7 +144,7 @@ public class Main extends Application {
 
         createSphereButton.setOnAction(e -> {
             sphereSelectButtons.add(new RadioButton());
-            spheres.add(new Sphere());
+            spheres.add(new Sphere(0, 0, 0, 0, 0, 0, 0));
             spheres.get(spheres.size() - 1).setRadioButton(sphereSelectButtons.get(sphereSelectButtons.size() - 1));
             selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(sphereSelectButtons.size() - 1), new TextField("New Sphere"));
             sphereSelectButtons.get(sphereSelectButtons.size() - 1).setToggleGroup(tg);
@@ -156,7 +156,6 @@ public class Main extends Application {
             z_slider.setValue(0);
             radius.setValue(0);
 
-            Render(image);
         });
 
         tg.selectedToggleProperty().addListener(
@@ -167,9 +166,12 @@ public class Main extends Application {
                             RadioButton selectedSphere = elem.getLinkedButton();
                             if (selectedSphere.isSelected()) {
                                 elem.setSelect(true);
+                                elem.setBeenSelected(true);
                             } else {
                                 elem.setSelect(false);
+                                elem.setBeenSelected(false);
                             }
+                            Render(image);
                         }
                     }
                 });
@@ -275,8 +277,8 @@ public class Main extends Application {
                 });
 
         radius.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
                             try {
@@ -324,7 +326,7 @@ public class Main extends Application {
         double a;
         double b;
         double c;
-        Color col;
+        Color col = Color.BLACK;
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
                 //Another for loop going through each sphere
@@ -363,11 +365,15 @@ public class Main extends Application {
                         double sphereShadedB = dp * spheres.get(s).getSphereB();
                         col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
                     }
-                    image_writer.setColor(i, j, col);
                 }
-            } // column loop
-        } // row loop
-    }
+                image_writer.setColor(i, j, col);
+        } // column loop
+
+    } // row loop
+
+
+}
+
 
     public static void main(String[] args) {
         launch();
