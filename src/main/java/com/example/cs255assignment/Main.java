@@ -51,8 +51,8 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    int Width = 250;
-    int Height = 250;
+    static int Width = 250;
+    static int Height = 250;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
 
@@ -275,8 +275,8 @@ public class Main extends Application {
                 });
 
         radius.valueProperty().addListener(
-                new ChangeListener < Number > () {
-                    public void changed(ObservableValue < ? extends Number >
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         for (Sphere elem : spheres) {
                             try {
@@ -310,63 +310,17 @@ public class Main extends Application {
     public void Render(WritableImage image) {
         //Get image dimensions, and declare loop variables
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
-        PixelWriter image_writer = image.getPixelWriter();
 
         //Variables for calculating which parts of the spheres to render
         Vector rayOrigin = new Vector(0, 0, 0);
         Vector rayDirection = new Vector(0, 0, 1);
-        Vector points;
-        double lineIntersectionWithSphere;
         Vector light = new Vector(0, 0, -250);
-        Vector rayFromCenterOfSphereToOriginOfLine;
 
-        //a, b, and c components of quadratic equation
-        double a;
-        double b;
-        double c;
-        Color col;
-        for (j = 0; j < h; j++) {
-            for (i = 0; i < w; i++) {
-                //Another for loop going through each sphere
-                //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
-                for (int s = 0; s < spheres.size(); s++) {
-                    rayOrigin.x = i - 250;
-                    rayOrigin.y = j - 250;
-                    rayOrigin.z = -200;
-                    rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(spheres.get(s));
-                    a = rayDirection.dot(rayDirection);
-                    b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
-                    c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
-
-                    //Calculate if light hits sphere
-                    double disc = b * b - 4 * a * c;
-                    if (disc < 0) {
-                        col = Color.color(0, 0, 0, 1);
-                    } else {
-                        col = spheres.get(s).getSphereColour();
-                    }
-
-                    //Calculate shading of light on sphere
-                    //NEED TO FIND SMALLEST VALUE OF T FOR CORRECT SHADING
-                    lineIntersectionWithSphere = (-b - sqrt(disc)) / 2 * a;
-                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
-                    Vector lv = light.sub(points);
-                    lv.normalise();
-                    Vector n = points.sub(spheres.get(s));
-                    n.normalise();
-                    double dp = lv.dot(n);
-                    if (dp < 0) {
-                        col = Color.color(0, 0, 0, 1);
-                    } else {
-                        double sphereShadedR = dp * spheres.get(s).getSphereR();
-                        double sphereShadedG = dp * spheres.get(s).getSphereG();
-                        double sphereShadedB = dp * spheres.get(s).getSphereB();
-                        col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
-                    }
-                    image_writer.setColor(i, j, col);
-                }
-            } // column loop
-        } // row loop
+        //Another for loop going through each sphere
+        //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
+        for (int s = 0; s < spheres.size(); s++) {
+            spheres.get(s).renderSphere(image, rayOrigin, rayDirection, light);
+        }
     }
 
     public static void main(String[] args) {
