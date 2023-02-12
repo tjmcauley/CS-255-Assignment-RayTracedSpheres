@@ -17,6 +17,7 @@ public class Sphere extends Vector{
     private Boolean selected;
 
     public Sphere() {
+
     }
 
     public Sphere(int x, int y, int z, double r, double g, double b, int radius) {

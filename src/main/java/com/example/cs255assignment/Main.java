@@ -148,6 +148,14 @@ public class Main extends Application {
             spheres.get(spheres.size() - 1).setRadioButton(sphereSelectButtons.get(sphereSelectButtons.size() - 1));
             selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(sphereSelectButtons.size() - 1), new TextField("New Sphere"));
             sphereSelectButtons.get(sphereSelectButtons.size() - 1).setToggleGroup(tg);
+            r_slider.setValue(122.5);
+            g_slider.setValue(122.5);
+            b_slider.setValue(122.5);
+            x_slider.setValue(0);
+            y_slider.setValue(0);
+            z_slider.setValue(0);
+            radius.setValue(0);
+
             Render(image);
         });
 
