@@ -17,7 +17,8 @@ public class Sphere extends Vector {
     private int radius;
     private RadioButton radioButton;
     private Boolean selected;
-    private boolean isRendered;
+    private double sphereT;
+
 
     public Sphere() {
 
@@ -68,6 +69,10 @@ public class Sphere extends Vector {
 
     public void setSelect(Boolean selected) {
         this.selected = selected;
+    }
+
+    public void setSphereT(double t){
+        this.sphereT = t;
     }
 
     public int getSphereRadius() {
@@ -121,57 +126,9 @@ public class Sphere extends Vector {
         return this.selected;
     }
 
-    public void renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
-        int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
-        PixelWriter image_writer = image.getPixelWriter();
-
-        Vector points;
-        double lineIntersectionWithSphere;
-        Vector rayFromCenterOfSphereToOriginOfLine;
-
-        //a, b, and c components of quadratic equation
-        double a;
-        double b;
-        double c;
-        Color col;
-
-        for (j = 0; j < h; j++) {
-            for (i = 0; i < w; i++) {
-                rayOrigin.x = i - 250;
-                rayOrigin.y = j - 250;
-                rayOrigin.z = -200;
-                rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(this);
-                a = rayDirection.dot(rayDirection);
-                b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
-                c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - this.getRadius() * this.getRadius();
-
-                //Calculate if light hits sphere
-                double disc = b * b - 4 * a * c;
-                if (disc < 0) {
-                    col = Color.color(0, 0, 0, 1);
-                } else {
-                    col = this.getSphereColour();
-                }
-
-                //Calculate shading of light on sphere
-                //NEED TO FIND SMALLEST VALUE OF T FOR CORRECT SHADING
-                lineIntersectionWithSphere = (-b - sqrt(disc)) / 2 * a;
-                points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
-                Vector lv = light.sub(points);
-                lv.normalise();
-                Vector n = points.sub(this);
-                n.normalise();
-                double dp = lv.dot(n);
-                if (dp < 0) {
-                    col = Color.color(0, 0, 0, 1);
-                } else {
-                    double sphereShadedR = dp * this.getSphereR();
-                    double sphereShadedG = dp * this.getSphereG();
-                    double sphereShadedB = dp * this.getSphereB();
-                    col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
-                }
-                image_writer.setColor(i, j, col);
-            }
-        }
+    public Double getSphereT(){
+        return this.sphereT;
     }
+
+
 }
