@@ -51,13 +51,24 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    static int Width = 250;
-    static int Height = 250;
+    static int Width = 500;
+    static int Height = 500;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
+    Sphere sphere1 = new Sphere(-100, 0, 100, 255, 255, 255, 75);
+    Sphere sphere2 = new Sphere(-200, -100, 100, 255, 0, 0, 75);
+    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
+    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
+    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
+        spheres.add(sphere1);
+        spheres.add(sphere2);
+        spheres.add(sphere3);
+        spheres.add(sphere4);
+        spheres.add(sphere5);
+
         stage.setTitle("Ray Tracing");
         //We need 3 things to see an image
         //1. We create an image we can write to
@@ -99,6 +110,28 @@ public class Main extends Application {
         radius.setMajorTickUnit(2);
         radius.setMinorTickCount(1);
 
+        ToggleGroup tg = new ToggleGroup();
+
+        RadioButton sphereButton1 = new RadioButton();
+        sphereButton1.setToggleGroup(tg);
+        sphere1.setRadioButton(sphereButton1);
+
+        RadioButton sphereButton2 = new RadioButton();
+        sphereButton2.setToggleGroup(tg);
+        sphere2.setRadioButton(sphereButton2);
+
+        RadioButton sphereButton3 = new RadioButton();
+        sphereButton3.setToggleGroup(tg);
+        sphere3.setRadioButton(sphereButton3);
+
+        RadioButton sphereButton4 = new RadioButton();
+        sphereButton4.setToggleGroup(tg);
+        sphere4.setRadioButton(sphereButton4);
+
+        RadioButton sphereButton5 = new RadioButton();
+        sphereButton5.setToggleGroup(tg);
+        sphere5.setRadioButton(sphereButton5);
+
         GridPane root = new GridPane();
         root.setVgap(4);
         //3. (referring to the 3 things we need to display an image)
@@ -110,14 +143,19 @@ public class Main extends Application {
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
         Label radiusSliderLabel = new Label("radius");
+        Label sphere1Label = new Label("Sphere 1");
+        Label sphere2Label = new Label("Sphere 2");
+        Label sphere3Label = new Label("Sphere 3");
+        Label sphere4Label = new Label("Sphere 4");
+        Label sphere5Label = new Label("Sphere 5");
 
         Button createSphereButton = new Button("Create Sphere");
         root.add(createSphereButton, 1, 0);
 
         FlowPane selectSphereLocation = new FlowPane();
         selectSphereLocation.setAlignment(Pos.TOP_CENTER);
-        selectSphereLocation.setPrefWrapLength(340);
-        ToggleGroup tg = new ToggleGroup();
+        selectSphereLocation.setPrefWrapLength(70);
+        selectSphereLocation.getChildren().addAll(sphereButton1, sphere1Label, sphereButton2, sphere2Label, sphereButton3, sphere3Label, sphereButton4, sphere4Label, sphereButton5, sphere5Label);
         root.add(selectSphereLocation, 2, 0);
 
         root.add(view, 0, 0);
@@ -295,10 +333,6 @@ public class Main extends Application {
     }
 
     public void Render(WritableImage image) {
-        Sphere sphere1 = new Sphere(-100, 0, 100, 255, 255, 255, 75);
-        Sphere sphere2 = new Sphere(-200, -100, 100, 255, 0, 0, 75);
-        spheres.add(sphere1);
-        spheres.add(sphere2);
 
         //Variables for calculating which parts of the spheres to render
         Vector rayOrigin = new Vector(0, 0, 0);
@@ -348,29 +382,24 @@ public class Main extends Application {
                             closestTIndex = s;
                         }
                     }
-                    double sphereShadedR = spheres.get(closestTIndex).getSphereR();
-                    double sphereShadedG = spheres.get(closestTIndex).getSphereG();
-                    double sphereShadedB = spheres.get(closestTIndex).getSphereB();
-                    col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
-                    image_writer.setColor(i, j, col);
+                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
+                    Vector lv = light.sub(points);
+                    lv.normalise();
+                    Vector n = points.sub(spheres.get(closestTIndex));
+                    n.normalise();
+                    double dp = lv.dot(n);
+                    if (dp < 0) {
+                        col = Color.color(0, 0, 0, 1);
+                    } else {
+                        double sphereShadedR = dp * spheres.get(s).getSphereR();
+                        double sphereShadedG = dp * spheres.get(s).getSphereG();
+                        double sphereShadedB = dp * spheres.get(s).getSphereB();
+                        col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
+                        image_writer.setColor(i, j, col);
+                    }
                 }
             }
         }
-
-//        points = rayOrigin.add(rayDirection.mul(smallestLineIntersectionWithSphere));
-//        Vector lv = light.sub(points);
-//        lv.normalise();
-//        Vector n = points.sub(spheres.get(s));
-//        n.normalise();
-//        double dp = lv.dot(n);
-//        if (dp < 0) {
-//            col = Color.color(0, 0, 0, 1);
-//        } else {
-//            double sphereShadedR = dp * spheres.get(s).getSphereR();
-//            double sphereShadedG = dp * spheres.get(s).getSphereG();
-//            double sphereShadedB = dp * spheres.get(s).getSphereB();
-//            col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
-//        }
     }
 
 
