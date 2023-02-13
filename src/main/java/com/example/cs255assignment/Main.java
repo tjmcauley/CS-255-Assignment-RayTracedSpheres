@@ -189,13 +189,13 @@ public class Main extends Application {
                             try {
                                 if (elem.getLinkedButton().isSelected()) {
 
-                                    x_slider.setValue(elem.getSphereX());
-                                    y_slider.setValue(elem.getSphereY());
-                                    z_slider.setValue(elem.getSphereZ());
-                                    r_slider.setValue(elem.getSphereR());
-                                    g_slider.setValue(elem.getSphereG());
-                                    b_slider.setValue(elem.getSphereB());
-                                    radius.setValue(elem.getRadius());
+                                    x_slider.setValue(elem.getSphereX() * 255);
+                                    y_slider.setValue(elem.getSphereY() * 255);
+                                    z_slider.setValue(elem.getSphereZ() * 255);
+                                    r_slider.setValue(elem.getSphereR() * 255);
+                                    g_slider.setValue(elem.getSphereG() * 255);
+                                    b_slider.setValue(elem.getSphereB() * 255);
+                                    radius.setValue(elem.getRadius() * 255);
                                     elem.setSelect(true);
                                 } else {
                                     elem.setSelect(false);
