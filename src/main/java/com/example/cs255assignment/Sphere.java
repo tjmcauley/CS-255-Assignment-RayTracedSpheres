@@ -118,7 +118,7 @@ public class Sphere extends Vector {
         return this.selected;
     }
 
-    public WritableImage renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
+    public void renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
 
@@ -170,6 +170,5 @@ public class Sphere extends Vector {
                 image_writer.setColor(i, j, col);
             }
         }
-        return image;
     }
 }
