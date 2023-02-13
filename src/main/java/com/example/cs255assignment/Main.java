@@ -120,6 +120,12 @@ public class Main extends Application {
         ToggleGroup tg = new ToggleGroup();
         root.add(selectSphereLocation, 2, 0);
 
+        RadioButton sphere1Button = new RadioButton();
+        RadioButton sphere2Button = new RadioButton();
+        sphere1Button.setToggleGroup(tg);
+        sphere2Button.setToggleGroup(tg);
+        selectSphereLocation.getChildren().addAll(sphere1Button, sphere2Button);
+
         root.add(view, 0, 0);
         root.add(xSliderLabel, 0, 1);
         root.add(x_slider, 0, 2);
@@ -142,34 +148,39 @@ public class Main extends Application {
         root.add(radiusSliderLabel, 0, 13);
         root.add(radius, 0, 14);
 
-        createSphereButton.setOnAction(e -> {
-            sphereSelectButtons.add(new RadioButton());
-            spheres.add(new Sphere());
-            spheres.get(spheres.size() - 1).setRadioButton(sphereSelectButtons.get(sphereSelectButtons.size() - 1));
-            selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(sphereSelectButtons.size() - 1), new TextField("New Sphere"));
-            sphereSelectButtons.get(sphereSelectButtons.size() - 1).setToggleGroup(tg);
-            r_slider.setValue(122.5);
-            g_slider.setValue(122.5);
-            b_slider.setValue(122.5);
-            x_slider.setValue(0);
-            y_slider.setValue(0);
-            z_slider.setValue(0);
-            radius.setValue(0);
+//        createSphereButton.setOnAction(e -> {
+//            sphereSelectButtons.add(new RadioButton());
+//            spheres.add(new Sphere());
+//            spheres.get(spheres.size() - 1).setRadioButton(sphereSelectButtons.get(sphereSelectButtons.size() - 1));
+//            selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(sphereSelectButtons.size() - 1), new TextField("New Sphere"));
+//            sphereSelectButtons.get(sphereSelectButtons.size() - 1).setToggleGroup(tg);
+//            r_slider.setValue(122.5);
+//            g_slider.setValue(122.5);
+//            b_slider.setValue(122.5);
+//            x_slider.setValue(0);
+//            y_slider.setValue(0);
+//            z_slider.setValue(0);
+//            radius.setValue(0);
+//
+//            Render(image);
+//        });
 
-            Render(image);
-        });
+        Sphere sphere1 = new Sphere();
+        sphere1.setRadioButton(sphere1Button);
+        Sphere sphere2 = new Sphere();
+        sphere2.setRadioButton(sphere2Button);
 
         tg.selectedToggleProperty().addListener(
                 new ChangeListener<Toggle>() {
                     public void changed(ObservableValue<? extends Toggle>
                                                 observable, Toggle oldValue, Toggle newValue) {
-                        for (Sphere elem : spheres) {
-                            RadioButton selectedSphere = elem.getLinkedButton();
-                            if (selectedSphere.isSelected()) {
-                                elem.setSelect(true);
-                            } else {
-                                elem.setSelect(false);
-                            }
+
+                        if (sphere1Button.isSelected()) {
+                            sphere1.setSelect(true);
+                            sphere2.setSelect(false);
+                        } else {
+                            sphere1.setSelect(false);
+                            sphere2.setSelect(true);
                         }
                     }
                 });
@@ -179,16 +190,16 @@ public class Main extends Application {
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
-                        for (Sphere elem : spheres) {
-                            try {
-                                if (elem.isSelected()) {
-                                    elem.setSphereX(newValue.intValue());
-                                }
-                            } catch (NullPointerException e) {
-                                System.out.println("Select a sphere to manipulate");
+                        try {
+                            if (sphere1.isSelected()) {
+                                sphere1.setSphereX(newValue.intValue());
+                            } else if (sphere2.isSelected()) {
+                                sphere2.setSphereX(newValue.intValue());
                             }
-                            Render(image);
+                        } catch (NullPointerException e) {
+                            System.out.println("Select a sphere to manipulate");
                         }
+                        Render(image, sphere1, sphere2);
                     }
                 });
 
@@ -196,16 +207,16 @@ public class Main extends Application {
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
-                        for (Sphere elem : spheres) {
-                            try {
-                                if (elem.isSelected()) {
-                                    elem.setSphereY(newValue.intValue());
-                                }
-                            } catch (NullPointerException e) {
-                                System.out.println("Select a sphere to manipulate");
+                        try {
+                            if (sphere1.isSelected()) {
+                                sphere1.setSphereY(newValue.intValue());
+                            } else if (sphere2.isSelected()) {
+                                sphere2.setSphereY(newValue.intValue());
                             }
-                            Render(image);
+                        } catch (NullPointerException e) {
+                            System.out.println("Select a sphere to manipulate");
                         }
+                        Render(image, sphere1, sphere2);
                     }
                 });
 
@@ -213,64 +224,64 @@ public class Main extends Application {
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
-                        for (Sphere elem : spheres) {
-                            try {
-                                if (elem.isSelected()) {
-                                    elem.setSphereZ(newValue.intValue());
-                                }
-                            } catch (NullPointerException e) {
-                                System.out.println("Select a sphere to manipulate");
+                        try {
+                            if (sphere1.isSelected()) {
+                                sphere1.setSphereZ(newValue.intValue());
+                            } else if (sphere2.isSelected()) {
+                                sphere2.setSphereZ(newValue.intValue());
                             }
-                            Render(image);
+                        } catch (NullPointerException e) {
+                            System.out.println("Select a sphere to manipulate");
                         }
+                        Render(image, sphere1, sphere2);
                     }
                 });
         r_slider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
-                        for (Sphere elem : spheres) {
-                            try {
-                                if (elem.isSelected()) {
-                                    elem.setSphereR(newValue.intValue());
-                                }
-                            } catch (NullPointerException e) {
-                                System.out.println("Select a sphere to manipulate");
+                        try {
+                            if (sphere1.isSelected()) {
+                                sphere1.setSphereR(newValue.intValue());
+                            } else if (sphere2.isSelected()) {
+                                sphere2.setSphereR(newValue.intValue());
                             }
-                            Render(image);
+                        } catch (NullPointerException e) {
+                            System.out.println("Select a sphere to manipulate");
                         }
+                        Render(image, sphere1, sphere2);
                     }
                 });
         g_slider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
-                        for (Sphere elem : spheres) {
-                            try {
-                                if (elem.isSelected()) {
-                                    elem.setSphereG(newValue.intValue());
-                                }
-                            } catch (NullPointerException e) {
-                                System.out.println("Select a sphere to manipulate");
+                        try {
+                            if (sphere1.isSelected()) {
+                                sphere1.setSphereG(newValue.intValue());
+                            } else if (sphere2.isSelected()) {
+                                sphere2.setSphereG(newValue.intValue());
                             }
-                            Render(image);
+                        } catch (NullPointerException e) {
+                            System.out.println("Select a sphere to manipulate");
                         }
+                        Render(image, sphere1, sphere2);
                     }
                 });
         b_slider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
-                        for (Sphere elem : spheres) {
-                            try {
-                                if (elem.isSelected()) {
-                                    elem.setSphereB(newValue.intValue());
-                                }
-                            } catch (NullPointerException e) {
-                                System.out.println("Select a sphere to manipulate");
+                        try {
+                            if (sphere1.isSelected()) {
+                                sphere1.setSphereB(newValue.intValue());
+                            } else if (sphere2.isSelected()) {
+                                sphere2.setSphereB(newValue.intValue());
                             }
-                            Render(image);
+                        } catch (NullPointerException e) {
+                            System.out.println("Select a sphere to manipulate");
                         }
+                        Render(image, sphere1, sphere2);
                     }
                 });
 
@@ -278,16 +289,16 @@ public class Main extends Application {
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
-                        for (Sphere elem : spheres) {
-                            try {
-                                if (elem.isSelected()) {
-                                    elem.setSphereRadius(newValue.intValue());
-                                }
-                            } catch (NullPointerException e) {
-                                System.out.println("Select a sphere to manipulate");
+                        try {
+                            if (sphere1.isSelected()) {
+                                sphere1.setSphereRadius(newValue.intValue());
+                            } else if (sphere2.isSelected()) {
+                                sphere2.setSphereRadius(newValue.intValue());
                             }
-                            Render(image);
+                        } catch (NullPointerException e) {
+                            System.out.println("Select a sphere to manipulate");
                         }
+                        Render(image, sphere1, sphere2);
                     }
                 });
 
@@ -299,7 +310,7 @@ public class Main extends Application {
             event.consume();
         });
 
-        Render(image);
+        Render(image, sphere1, sphere2);
 
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
@@ -307,7 +318,7 @@ public class Main extends Application {
         stage.show();
     }
 
-    public void Render(WritableImage image) {
+    public void Render(WritableImage image, Sphere sphere1, Sphere sphere2) {
         //Get image dimensions, and declare loop variables
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
 
@@ -318,9 +329,20 @@ public class Main extends Application {
 
         //Another for loop going through each sphere
         //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
-        for (int s = 0; s < spheres.size(); s++) {
-            spheres.get(s).renderSphere(image, rayOrigin, rayDirection, light);
-        }
+//        for (int s = 0; s < spheres.size(); s++) {
+//            spheres.get(s).renderSphere(image, rayOrigin, rayDirection, light);
+//        }
+
+//        System.out.println(sphere1.getSphereX());
+//        System.out.println(sphere1.getSphereY());
+//        System.out.println(sphere1.getSphereZ());
+//        System.out.println(sphere1.getSphereR());
+//        System.out.println(sphere1.getSphereG());
+//        System.out.println(sphere1.getSphereB());
+//        System.out.println(sphere1.getSphereRadius());
+
+        sphere1.renderSphere(image, rayOrigin, rayDirection, light);
+        sphere2.renderSphere(image, rayOrigin, rayDirection, light);
     }
 
     public static void main(String[] args) {

@@ -4,9 +4,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
-
-import java.util.ArrayList;
 
 import static java.lang.Math.sqrt;
 
@@ -121,7 +118,7 @@ public class Sphere extends Vector {
         return this.selected;
     }
 
-    public void renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
+    public WritableImage renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
 
@@ -148,7 +145,7 @@ public class Sphere extends Vector {
                 //Calculate if light hits sphere
                 double disc = b * b - 4 * a * c;
                 if (disc < 0) {
-                    col = Color.color(0, 0, 0, 1);
+                    col = Color.color(0, 0, 0, 0);
                 } else {
                     col = this.getSphereColour();
                 }
@@ -173,5 +170,6 @@ public class Sphere extends Vector {
                 image_writer.setColor(i, j, col);
             }
         }
+        return image;
     }
 }
