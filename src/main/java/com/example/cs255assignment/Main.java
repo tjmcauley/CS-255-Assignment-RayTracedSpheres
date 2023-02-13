@@ -188,6 +188,14 @@ public class Main extends Application {
                         for (Sphere elem : spheres) {
                             try {
                                 if (elem.getLinkedButton().isSelected()) {
+
+                                    x_slider.setValue(elem.getSphereX());
+                                    y_slider.setValue(elem.getSphereY());
+                                    z_slider.setValue(elem.getSphereZ());
+                                    r_slider.setValue(elem.getSphereR());
+                                    g_slider.setValue(elem.getSphereG());
+                                    b_slider.setValue(elem.getSphereB());
+                                    radius.setValue(elem.getRadius());
                                     elem.setSelect(true);
                                 } else {
                                     elem.setSelect(false);
@@ -196,6 +204,8 @@ public class Main extends Application {
                                 System.out.println("Select a sphere to manipulate");
                             }
                         }
+                        Render(image);
+
                     }
                 });
 
