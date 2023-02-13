@@ -53,13 +53,8 @@ import static java.lang.Math.sqrt;
 public class Main extends Application {
     static int Width = 250;
     static int Height = 250;
-    public double smallestT = -1.0;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
-    double r = 0;
-    double g = 0;
-    double blue = 0;
-    double hit;
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
@@ -71,8 +66,7 @@ public class Main extends Application {
         ImageView view = new ImageView(image);
         //3. Add to the pane (below)
         //Create the simple GUI
-
-        Slider x_slider = new Slider(-250 ,250,0 );
+        Slider x_slider = new Slider(-250, 250, 0);
         x_slider.setShowTickLabels(true);
         x_slider.setShowTickMarks(true);
         x_slider.setMajorTickUnit(25);
@@ -148,33 +142,20 @@ public class Main extends Application {
         root.add(radiusSliderLabel, 0, 13);
         root.add(radius, 0, 14);
 
-        createSphereButton.setOnAction(e -> {
-            sphereSelectButtons.add(new RadioButton());
-            spheres.add(new Sphere(0,0,0,0,0,0,1));
-            spheres.get(spheres.size() - 1).setRadioButton(sphereSelectButtons.get(sphereSelectButtons.size() - 1));
-            selectSphereLocation.getChildren().addAll(sphereSelectButtons.get(sphereSelectButtons.size() - 1), new TextField("New Sphere"));
-            sphereSelectButtons.get(sphereSelectButtons.size() - 1).setToggleGroup(tg);
-            r_slider.setValue(122.5);
-            g_slider.setValue(122.5);
-            b_slider.setValue(122.5);
-            x_slider.setValue(0);
-            y_slider.setValue(0);
-            z_slider.setValue(0);
-            radius.setValue(0);
-
-            Render(image);
-        });
-
         tg.selectedToggleProperty().addListener(
                 new ChangeListener<Toggle>() {
                     public void changed(ObservableValue<? extends Toggle>
                                                 observable, Toggle oldValue, Toggle newValue) {
+
                         for (Sphere elem : spheres) {
-                            RadioButton selectedSphere = elem.getLinkedButton();
-                            if (selectedSphere.isSelected()) {
-                                elem.setSelect(true);
-                            } else {
-                                elem.setSelect(false);
+                            try {
+                                if (elem.getLinkedButton().isSelected()) {
+                                    elem.setSelect(true);
+                                } else {
+                                    elem.setSelect(false);
+                                }
+                            } catch (NullPointerException e) {
+                                System.out.println("Select a sphere to manipulate");
                             }
                         }
                     }
@@ -314,101 +295,83 @@ public class Main extends Application {
     }
 
     public void Render(WritableImage image) {
-        //Get image dimensions, and declare loop variables
-        int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
+        Sphere sphere1 = new Sphere(-100, 0, 100, 255, 255, 255, 75);
+        Sphere sphere2 = new Sphere(-200, -100, 100, 255, 0, 0, 75);
+        spheres.add(sphere1);
+        spheres.add(sphere2);
 
         //Variables for calculating which parts of the spheres to render
         Vector rayOrigin = new Vector(0, 0, 0);
         Vector rayDirection = new Vector(0, 0, 1);
         Vector light = new Vector(0, 0, -250);
+        int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
+        PixelWriter image_writer = image.getPixelWriter();
+        int closestTIndex = 0;
 
-        //Another for loop going through each sphere
-        //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
+        Vector points;
+        double lineIntersectionWithSphere;
+        Vector rayFromCenterOfSphereToOriginOfLine;
 
+        //a, b, and c components of quadratic equation
+        double a;
+        double b;
+        double c;
+        Color col;
 
-
-            PixelWriter image_writer = image.getPixelWriter();
-
-            Vector points;
-            double lineIntersectionWithSphere = 0;
-            Vector rayFromCenterOfSphereToOriginOfLine;
-
-            //a, b, and c components of quadratic equation
-            double a;
-            double b;
-            double c;
-            Color col = Color.BLACK;
-
-            for (j = 0; j < h; j++) {
-
-                for (i = 0; i < w; i++) {
-                    for (int s = 0; s < spheres.size(); s++) {
-                    rayOrigin.x = i - 250;
-                    rayOrigin.y = j - 250;
-                    rayOrigin.z = -200;
+        for (j = 0; j < h; j++) {
+            for (i = 0; i < w; i++) {
+                rayOrigin.x = i - 250;
+                rayOrigin.y = j - 250;
+                rayOrigin.z = -200;
+                double closestT = 1000000;
+                image_writer.setColor(i, j, Color.color(0, 0, 0, 1));
+                //Another for loop going through each sphere
+                //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
+                for (int s = 0; s < spheres.size(); s++) {
                     rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(spheres.get(s));
-
                     a = rayDirection.dot(rayDirection);
                     b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
                     c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
 
-
-
                     //Calculate if light hits sphere
                     double disc = b * b - 4 * a * c;
-                    if (disc <= 0) {
-                        disc = 0;
-                    } else {
-                        hit = disc;
-                    }
 
-                    //Calculate shading of light on sphere
-                    //NEED TO FIND SMALLEST VALUE OF T FOR CORRECT SHADING
-
-
-                    lineIntersectionWithSphere = (-b - sqrt(hit)) / 2 * a;
-                    spheres.get(s).setSphereT(lineIntersectionWithSphere);
-                    System.out.println(hit);
-
-
-
-                        if(lineIntersectionWithSphere > 0  && smallestT == -1){
-                        smallestT = lineIntersectionWithSphere;
-                        System.out.println("I'm working");
-                        }else if (lineIntersectionWithSphere >= 0 && lineIntersectionWithSphere < smallestT){
-                            smallestT = lineIntersectionWithSphere;
-                        }
-
-
-                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
-                    Vector lv = light.sub(points);
-                    lv.normalise();
-                    Vector n = points.sub(spheres.get(s));
-                    n.normalise();
-                    double dp = lv.dot(n);
-                    if (dp < 0) {
+                    if (disc < 0) {
                         col = Color.color(0, 0, 0, 1);
+                        continue;
                     } else {
-                        for (Sphere x : spheres){
-                            if (x.getSphereT() == smallestT){
-                                this.r = x.getSphereR();
-                                this.g = x.getSphereG();
-                                this.blue = x.getSphereB();
-
-                            }
-
+                        //Calculate shading of light on sphere
+                        //NEED TO KEEP TRACK OF SMALLEST T VALUE
+                        lineIntersectionWithSphere = (-b - sqrt(disc)) / 2 * a;
+                        if (lineIntersectionWithSphere > 0 && lineIntersectionWithSphere < closestT) {
+                            closestT = lineIntersectionWithSphere;
+                            closestTIndex = s;
                         }
-                        double sphereShadedR = dp * r;
-                        double sphereShadedG = dp * g;
-                        double sphereShadedB = dp * blue;
-                        col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
                     }
+                    double sphereShadedR = spheres.get(closestTIndex).getSphereR();
+                    double sphereShadedG = spheres.get(closestTIndex).getSphereG();
+                    double sphereShadedB = spheres.get(closestTIndex).getSphereB();
+                    col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
                     image_writer.setColor(i, j, col);
                 }
             }
         }
-    }
 
+//        points = rayOrigin.add(rayDirection.mul(smallestLineIntersectionWithSphere));
+//        Vector lv = light.sub(points);
+//        lv.normalise();
+//        Vector n = points.sub(spheres.get(s));
+//        n.normalise();
+//        double dp = lv.dot(n);
+//        if (dp < 0) {
+//            col = Color.color(0, 0, 0, 1);
+//        } else {
+//            double sphereShadedR = dp * spheres.get(s).getSphereR();
+//            double sphereShadedG = dp * spheres.get(s).getSphereG();
+//            double sphereShadedB = dp * spheres.get(s).getSphereB();
+//            col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
+//        }
+    }
 
 
     public static void main(String[] args) {

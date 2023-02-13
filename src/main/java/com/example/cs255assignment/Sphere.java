@@ -4,9 +4,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
-
-import java.util.ArrayList;
 
 import static java.lang.Math.sqrt;
 
@@ -16,9 +13,9 @@ public class Sphere extends Vector {
     private double b;
     private int radius;
     private RadioButton radioButton;
-    private Boolean selected;
-    private double sphereT;
+    private boolean selected = false;
 
+    private double smallestT;
 
     public Sphere() {
 
@@ -69,10 +66,6 @@ public class Sphere extends Vector {
 
     public void setSelect(Boolean selected) {
         this.selected = selected;
-    }
-
-    public void setSphereT(double t){
-        this.sphereT = t;
     }
 
     public int getSphereRadius() {
@@ -126,9 +119,14 @@ public class Sphere extends Vector {
         return this.selected;
     }
 
-    public Double getSphereT(){
-        return this.sphereT;
+    public void setSmallestT(double smallestT) {
+        this.smallestT = smallestT;
     }
 
+    public double getSmallestT() {
+        return this.smallestT;
+    }
 
+    public void renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
+    }
 }

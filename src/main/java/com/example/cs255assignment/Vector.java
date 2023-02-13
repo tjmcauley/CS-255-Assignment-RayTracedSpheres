@@ -2,8 +2,6 @@ package com.example.cs255assignment;
 
 import javafx.scene.image.WritableImage;
 
-import java.lang.Math.*;
-
 public class Vector {
     double x, y, z;
     public Vector() {}
@@ -39,6 +37,4 @@ public class Vector {
         System.out.println("x=" + x + ", y=" + y + ", z=" + z);
     }
 
-    public void renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
-    }
 }
