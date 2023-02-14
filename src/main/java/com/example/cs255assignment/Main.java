@@ -401,12 +401,10 @@ public class Main extends Application {
                     if (dp < 0) {
                         col = Color.color(0, 0, 0, 1);
                     } else {
-                        if (dp > 1){
-                            dp = 1;
-                        }
-                        double sphereShadedR = dp * spheres.get(s).getSphereR();
-                        double sphereShadedG = dp * spheres.get(s).getSphereG();
-                        double sphereShadedB = dp * spheres.get(s).getSphereB();
+                        //Diffuse + Ambient lighting
+                        double sphereShadedR = (dp * 0.7 * spheres.get(s).getSphereR()) + (spheres.get(s).getSphereR() * 0.3);
+                        double sphereShadedG = (dp * 0.7 * spheres.get(s).getSphereG()) + (spheres.get(s).getSphereG() * 0.3);
+                        double sphereShadedB = (dp * 0.7 * spheres.get(s).getSphereB()) + (spheres.get(s).getSphereB() * 0.3);
                         col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
                         image_writer.setColor(i, j, col);
                     }
