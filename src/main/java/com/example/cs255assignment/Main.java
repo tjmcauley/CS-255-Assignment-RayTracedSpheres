@@ -345,6 +345,7 @@ public class Main extends Application {
     public void Render(WritableImage image) {
 
         //Variables for calculating which parts of the spheres to render
+        Camera camera = new Camera();
         Vector rayOrigin = new Vector(0, 0, 0);
         Vector rayDirection = new Vector(0, 0, 1);
         Vector light = new Vector(0, 0, -250);
@@ -392,6 +393,7 @@ public class Main extends Application {
                             closestTIndex = s;
                         }
                     }
+                    //Could add shadows if you're gutsy
                     points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
                     Vector lv = light.sub(points);
                     lv.normalise();
