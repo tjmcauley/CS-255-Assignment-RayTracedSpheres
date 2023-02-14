@@ -51,8 +51,8 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    static int Width = 500;
-    static int Height = 500;
+    static int Width = 100;
+    static int Height = 100;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(-100, 0, 100, 255, 255, 255, 75);
@@ -110,6 +110,18 @@ public class Main extends Application {
         radius.setMajorTickUnit(2);
         radius.setMinorTickCount(1);
 
+        Slider camX_slider = new Slider(-250, 250, 0);
+        camX_slider.setShowTickLabels(true);
+        camX_slider.setShowTickMarks(true);
+
+        Slider camY_slider = new Slider(-250, 250, 0);
+        camY_slider.setShowTickLabels(true);
+        camY_slider.setShowTickMarks(true);
+
+        Slider camZ_slider = new Slider(-250, 250, 0);
+        camZ_slider.setShowTickLabels(true);
+        camZ_slider.setShowTickMarks(true);
+
         ToggleGroup tg = new ToggleGroup();
 
         RadioButton sphereButton1 = new RadioButton();
@@ -143,6 +155,9 @@ public class Main extends Application {
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
         Label radiusSliderLabel = new Label("radius");
+        Label camXSliderLabel = new Label("Cam x");
+        Label camYSliderLabel = new Label("Cam y");
+        Label camZSliderLabel = new Label("Cam z");
         Label sphere1Label = new Label("Sphere 1");
         Label sphere2Label = new Label("Sphere 2");
         Label sphere3Label = new Label("Sphere 3");
@@ -179,6 +194,16 @@ public class Main extends Application {
 
         root.add(radiusSliderLabel, 0, 13);
         root.add(radius, 0, 14);
+
+        root.add(camXSliderLabel, 0, 15);
+        root.add(camX_slider, 0, 16);
+
+        root.add(camYSliderLabel, 0, 17);
+        root.add(camY_slider, 0, 18);
+
+        root.add(camZSliderLabel, 0, 19);
+        root.add(camZ_slider, 0, 20);
+
 
         tg.selectedToggleProperty().addListener(
                 new ChangeListener<Toggle>() {
@@ -345,7 +370,6 @@ public class Main extends Application {
     public void Render(WritableImage image) {
 
         //Variables for calculating which parts of the spheres to render
-        Camera camera = new Camera();
         Vector rayOrigin = new Vector(0, 0, 0);
         Vector rayDirection = new Vector(0, 0, 1);
         Vector light = new Vector(0, 0, -250);
@@ -403,6 +427,9 @@ public class Main extends Application {
                     if (dp < 0) {
                         col = Color.color(0, 0, 0, 1);
                     } else {
+                        if (dp > 1) {
+                            dp = 1;
+                        }
                         //Diffuse + Ambient lighting
                         double sphereShadedR = (dp * 0.7 * spheres.get(s).getSphereR()) + (spheres.get(s).getSphereR() * 0.3);
                         double sphereShadedG = (dp * 0.7 * spheres.get(s).getSphereG()) + (spheres.get(s).getSphereG() * 0.3);
