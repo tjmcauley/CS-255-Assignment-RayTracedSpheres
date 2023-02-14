@@ -188,14 +188,6 @@ public class Main extends Application {
                         for (Sphere elem : spheres) {
                             try {
                                 if (elem.getLinkedButton().isSelected()) {
-
-                                    x_slider.setValue(elem.getSphereX() );
-                                    y_slider.setValue(elem.getSphereY() );
-                                    z_slider.setValue(elem.getSphereZ() );
-                                    r_slider.setValue(elem.getSphereR() * 255);
-                                    g_slider.setValue(elem.getSphereG() * 255);
-                                    b_slider.setValue(elem.getSphereB() * 255);
-                                    radius.setValue(elem.getRadius() );
                                     elem.setSelect(true);
                                 } else {
                                     elem.setSelect(false);
