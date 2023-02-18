@@ -384,9 +384,6 @@ public class Main extends Application {
         //VRV.normalise()
         //VUV = VRV.CrossProduct(VPN)
         //VUV.normalise()
-        Vector testA = new Vector(3, 5, -7);
-        Vector testB = new Vector(2, -6, 4);
-        testA.crossProduct(testB).print();
 
         Vector points;
         double lineIntersectionWithSphere;
