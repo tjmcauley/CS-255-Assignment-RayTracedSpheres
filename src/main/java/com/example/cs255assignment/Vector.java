@@ -33,19 +33,11 @@ public class Vector {
     public Vector mul(double d) {
         return new Vector(d * x, d * y, d * z);
     }
+
+    public Vector crossProduct(Vector a) {
+        return new Vector(y * a.z - a.y * z, a.x * z - x * a.z, x * a.y - a.x - y);
+    }
     public void print() {
         System.out.println("x=" + x + ", y=" + y + ", z=" + z);
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
     }
 }
