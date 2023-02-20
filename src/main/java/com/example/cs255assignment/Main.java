@@ -55,19 +55,22 @@ public class Main extends Application {
     static int Height = 100;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
-    Sphere sphere1 = new Sphere(-100, 0, 100, 255, 255, 255, 75);
-    Sphere sphere2 = new Sphere(-200, -100, 100, 255, 0, 0, 75);
-    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
-    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
-    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
+    Sphere sphere1 = new Sphere(0, 0, 100, 255, 255, 255, 75);
+    //    Sphere sphere2 = new Sphere(-200, -100, 100, 255, 0, 0, 75);
+//    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
+//    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
+//    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
+    double camXValue = 0;
+    double camYValue = 0;
+    double camZValue = 0;
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         spheres.add(sphere1);
-        spheres.add(sphere2);
-        spheres.add(sphere3);
-        spheres.add(sphere4);
-        spheres.add(sphere5);
+//        spheres.add(sphere2);
+//        spheres.add(sphere3);
+//        spheres.add(sphere4);
+//        spheres.add(sphere5);
 
         stage.setTitle("Ray Tracing");
         //We need 3 things to see an image
@@ -130,19 +133,19 @@ public class Main extends Application {
 
         RadioButton sphereButton2 = new RadioButton();
         sphereButton2.setToggleGroup(tg);
-        sphere2.setRadioButton(sphereButton2);
+        //sphere2.setRadioButton(sphereButton2);
 
         RadioButton sphereButton3 = new RadioButton();
         sphereButton3.setToggleGroup(tg);
-        sphere3.setRadioButton(sphereButton3);
+        //sphere3.setRadioButton(sphereButton3);
 
         RadioButton sphereButton4 = new RadioButton();
         sphereButton4.setToggleGroup(tg);
-        sphere4.setRadioButton(sphereButton4);
+        //sphere4.setRadioButton(sphereButton4);
 
         RadioButton sphereButton5 = new RadioButton();
         sphereButton5.setToggleGroup(tg);
-        sphere5.setRadioButton(sphereButton5);
+        //sphere5.setRadioButton(sphereButton5);
 
         GridPane root = new GridPane();
         root.setVgap(4);
@@ -230,7 +233,6 @@ public class Main extends Application {
                             }
                         }
                         Render(image);
-
                     }
                 });
 
@@ -351,15 +353,46 @@ public class Main extends Application {
                     }
                 });
 
+        camX_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+
+                        camXValue = newValue.intValue();
+                        Render(image);
+                    }
+                });
+
+        camY_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+
+                        camYValue = newValue.intValue();
+                        Render(image);
+                    }
+                });
+
+        camZ_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+
+                        camZValue = newValue.intValue();
+                        Render(image);
+                    }
+                });
+
+
         //The following is in case you want to interact with the image in any way
         //e.g., for user interaction, or you can find out the pixel position for
         //debugging
-        view.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
+        view.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event ->
+
+        {
             System.out.println(event.getX() + " " + event.getY());
             event.consume();
         });
-
-        Render(image);
 
         //Display to user
         Scene scene = new Scene(root, 1024, 768);
@@ -370,20 +403,27 @@ public class Main extends Application {
     public void Render(WritableImage image) {
 
         //Variables for calculating which parts of the spheres to render
-        Vector rayOrigin = new Vector(0, 0, 0);
-        Vector rayDirection = new Vector(0, 0, 1);
+//        Vector rayOrigin = new Vector(0, 0, 0);
+//        Vector rayDirection = new Vector(0, 0, 1);
         Vector light = new Vector(0, 0, -250);
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
         int closestTIndex = 0;
 
         //Variables for calculating the camera's position
-        //VPN - LookAt - VRP
-        //VPN.normalise()
-        //VRV = VPN.CrossProduuct(VUV)
-        //VRV.normalise()
-        //VUV = VRV.CrossProduct(VPN)
-        //VUV.normalise()
+        Vector vrp = new Vector(0, 0, 0);
+        Vector vuv = new Vector(0, 1, 0);
+        Vector lookAt = new Vector(0, 0, 1);
+
+        //Cam z value
+        Vector vpn = lookAt.sub(vrp);
+        vpn.normalise();
+        //Cam x value
+        Vector vrv = vpn.crossProduct(vuv);
+        vrv.normalise();
+        //Cam y value
+        vuv = vrv.crossProduct(vpn);
+        vuv.normalise();
 
         Vector points;
         double lineIntersectionWithSphere;
@@ -397,17 +437,17 @@ public class Main extends Application {
 
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
-                rayOrigin.x = i - 250;
-                rayOrigin.y = j - 250;
-                rayOrigin.z = -200;
+                vrp.x = ((w - i) - w / 2) + camXValue;
+                vrp.y = ((h - j) - h / 2) + camYValue;
+                vrp.z = vrp.z + camZValue;
                 double closestT = 1000000;
                 image_writer.setColor(i, j, Color.color(0, 0, 0, 1));
                 //Another for loop going through each sphere
                 //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
                 for (int s = 0; s < spheres.size(); s++) {
-                    rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(spheres.get(s));
-                    a = rayDirection.dot(rayDirection);
-                    b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
+                    rayFromCenterOfSphereToOriginOfLine = vrp.sub(spheres.get(s));
+                    a = lookAt.dot(lookAt);
+                    b = rayFromCenterOfSphereToOriginOfLine.dot(lookAt) * 2;
                     c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
 
                     //Calculate if light hits sphere
@@ -426,7 +466,7 @@ public class Main extends Application {
                         }
                     }
                     //Could add shadows if you're gutsy
-                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
+                    points = vrp.add(lookAt.mul(lineIntersectionWithSphere));
                     Vector lv = light.sub(points);
                     lv.normalise();
                     Vector n = points.sub(spheres.get(closestTIndex));
