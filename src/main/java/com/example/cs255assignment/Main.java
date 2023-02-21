@@ -51,8 +51,10 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    static int Width = 100;
-    static int Height = 100;
+    Vector rayOrigin = new Vector(0, 0, 0);
+    Vector rayDirection = new Vector(0, 0, 1);
+    static int Width = 400;
+    static int Height = 400;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(-100, 0, 100, 255, 255, 255, 75);
@@ -145,7 +147,7 @@ public class Main extends Application {
         sphere5.setRadioButton(sphereButton5);
 
         GridPane root = new GridPane();
-        root.setVgap(4);
+        root.setVgap(0.5);
         //3. (referring to the 3 things we need to display an image)
         //we need to add it to the pane
         Label xSliderLabel = new Label("X coord");
@@ -204,11 +206,16 @@ public class Main extends Application {
         root.add(camZSliderLabel, 0, 19);
         root.add(camZ_slider, 0, 20);
 
-
         tg.selectedToggleProperty().addListener(
                 new ChangeListener<Toggle>() {
                     public void changed(ObservableValue<? extends Toggle>
                                                 observable, Toggle oldValue, Toggle newValue) {
+
+                        for (Sphere sphere : spheres) {
+                            if (sphere.isSelected()) {
+                                sphere.setSelect(false);
+                            }
+                        }
 
                         for (Sphere elem : spheres) {
                             try {
@@ -230,7 +237,6 @@ public class Main extends Application {
                             }
                         }
                         Render(image);
-
                     }
                 });
 
@@ -285,6 +291,7 @@ public class Main extends Application {
                         }
                     }
                 });
+
         r_slider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
@@ -301,6 +308,7 @@ public class Main extends Application {
                         }
                     }
                 });
+
         g_slider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
@@ -317,6 +325,7 @@ public class Main extends Application {
                         }
                     }
                 });
+
         b_slider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
@@ -351,9 +360,16 @@ public class Main extends Application {
                     }
                 });
 
-        //The following is in case you want to interact with the image in any way
-        //e.g., for user interaction, or you can find out the pixel position for
-        //debugging
+        camX_slider.valueProperty().addListener(
+                new ChangeListener<Number>() {
+                    public void changed(ObservableValue<? extends Number>
+                                                observable, Number oldValue, Number newValue) {
+
+                        rayDirection.setY(newValue.intValue()/255);
+                            Render(image);
+                        }
+                });
+
         view.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
             System.out.println(event.getX() + " " + event.getY());
             event.consume();
@@ -361,7 +377,6 @@ public class Main extends Application {
 
         Render(image);
 
-        //Display to user
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
         stage.show();
@@ -369,79 +384,86 @@ public class Main extends Application {
 
     public void Render(WritableImage image) {
 
-        //Variables for calculating which parts of the spheres to render
-        Vector rayOrigin = new Vector(0, 0, 0);
-        Vector rayDirection = new Vector(0, 0, 1);
-        Vector light = new Vector(0, 0, -250);
+        Vector light = new Vector(0, 0, -200);
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
-        int closestTIndex = 0;
+        int closestTIndex = -1;
 
         Vector points;
-        double lineIntersectionWithSphere;
+        double lineIntersectionWithSphere = 0;
         Vector rayFromCenterOfSphereToOriginOfLine;
+        double disc = 0;
+        double hit;
 
         //a, b, and c components of quadratic equation
-        double a;
-        double b;
-        double c;
+        double a = 0;
+        double b = 0;
+        double c = 0;
         Color col;
 
-        for (j = 0; j < h; j++) {
-            for (i = 0; i < w; i++) {
-                rayOrigin.x = i - 250;
-                rayOrigin.y = j - 250;
+        for (j = 0; j < Height; j++) {
+            for (i = 0; i < Width; i++) {
+                closestTIndex = -1;
+
+                rayOrigin.x = i - 200;
+                rayOrigin.y = j - 200;
                 rayOrigin.z = -200;
-                double closestT = 1000000;
-                image_writer.setColor(i, j, Color.color(0, 0, 0, 1));
-                //Another for loop going through each sphere
-                //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
+                double closestT = -1;
+
                 for (int s = 0; s < spheres.size(); s++) {
                     rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(spheres.get(s));
                     a = rayDirection.dot(rayDirection);
                     b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
                     c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
 
-                    //Calculate if light hits sphere
-                    double disc = b * b - 4 * a * c;
+                    disc = (b * b) - (4 * a * c);
 
-                    if (disc < 0) {
-                        col = Color.color(0, 0, 0, 1);
-                        continue;
-                    } else {
-                        //Calculate shading of light on sphere
-                        //NEED TO KEEP TRACK OF SMALLEST T VALUE
+                    if (disc > 0 ) {
                         lineIntersectionWithSphere = (-b - sqrt(disc)) / 2 * a;
-                        if (lineIntersectionWithSphere > 0 && lineIntersectionWithSphere < closestT) {
+                        if (lineIntersectionWithSphere > 0 && lineIntersectionWithSphere < closestT || closestT == -1) {
                             closestT = lineIntersectionWithSphere;
                             closestTIndex = s;
                         }
                     }
-                    //Could add shadows if you're gutsy
-                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
-                    Vector lv = light.sub(points);
-                    lv.normalise();
-                    Vector n = points.sub(spheres.get(closestTIndex));
-                    n.normalise();
-                    double dp = lv.dot(n);
-                    if (dp < 0) {
-                        col = Color.color(0, 0, 0, 1);
-                    } else {
-                        if (dp > 1) {
+                }
+
+                if (closestTIndex == -1) {
+                    image_writer.setColor(i,j, Color.GRAY);
+                    //System.out.print(closestTIndex);
+                    //System.out.println("Hit");
+                }
+                else{
+                    if (closestT < 0) {
+                        closestT = ((-b + sqrt(disc)) / 2 * a);
+                        if (closestT < 0) {
+                            col = Color.GREY;
+                        }
+                    }
+
+                        points = rayOrigin.add(rayDirection.mul(closestT));
+                        Vector lv = light.sub(points);
+                        lv.normalise();
+                        Vector n = points.sub(spheres.get(closestTIndex).getCos());
+                        n.normalise();
+
+                        double dp = lv.dot(n);
+
+                        if (dp < 0) {
+                            dp = 0;
+                        } else if (dp > 1) {
                             dp = 1;
                         }
-                        //Diffuse + Ambient lighting
-                        double sphereShadedR = (dp * 0.7 * spheres.get(s).getSphereR()) + (spheres.get(s).getSphereR() * 0.3);
-                        double sphereShadedG = (dp * 0.7 * spheres.get(s).getSphereG()) + (spheres.get(s).getSphereG() * 0.3);
-                        double sphereShadedB = (dp * 0.7 * spheres.get(s).getSphereB()) + (spheres.get(s).getSphereB() * 0.3);
-                        col = Color.color(sphereShadedR, sphereShadedG, sphereShadedB, 1);
+
+                        Vector dc = new Vector((dp * 0.7 * spheres.get(closestTIndex).getSphereR()) + (spheres.get(closestTIndex).getSphereR() * 0.3),
+                                (dp * 0.7 * spheres.get(closestTIndex).getSphereG()) + (spheres.get(closestTIndex).getSphereG() * 0.3),
+                                (dp * 0.7 * spheres.get(closestTIndex).getSphereB()) + (spheres.get(closestTIndex).getSphereB() * 0.3));
+
+                        col = Color.color(dc.x, dc.y, dc.z, 1);
                         image_writer.setColor(i, j, col);
-                    }
                 }
             }
         }
     }
-
 
     public static void main(String[] args) {
         launch();

@@ -10,9 +10,11 @@ public class Vector {
         y = j;
         z = k;
     }
+
     public double magnitude() {
         return Math.sqrt(x * x + y * y + z * z);
     }
+
     public void normalise() {
         double mag = magnitude();
         if (mag != 0) {
@@ -21,18 +23,23 @@ public class Vector {
             z /= mag;
         }
     }
+
     public double dot(Vector a) {
         return x * a.x + y * a.y + z * a.z;
     }
+
     public Vector sub(Vector a) {
         return new Vector(x - a.x, y - a.y, z - a.z);
     }
+
     public Vector add(Vector a) {
         return new Vector(x + a.x, y + a.y, z + a.z);
     }
+
     public Vector mul(double d) {
         return new Vector(d * x, d * y, d * z);
     }
+
     public void print() {
         System.out.println("x=" + x + ", y=" + y + ", z=" + z);
     }
