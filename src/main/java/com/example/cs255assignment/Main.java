@@ -51,8 +51,8 @@ import javafx.geometry.HPos;
 import static java.lang.Math.sqrt;
 
 public class Main extends Application {
-    static int Width = 100;
-    static int Height = 100;
+    static int Width = 500;
+    static int Height = 500;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(0, 0, 100, 255, 255, 255, 75);
@@ -80,50 +80,46 @@ public class Main extends Application {
         ImageView view = new ImageView(image);
         //3. Add to the pane (below)
         //Create the simple GUI
-        Slider x_slider = new Slider(-250, 250, 0);
-        x_slider.setShowTickLabels(true);
-        x_slider.setShowTickMarks(true);
-        x_slider.setMajorTickUnit(25);
+        Slider xSlider = new Slider(-250, 250, 0);
+        xSlider.setShowTickLabels(true);
+        xSlider.setShowTickMarks(true);
+        xSlider.setMajorTickUnit(25);
 
-        Slider y_slider = new Slider(-250, 250, 0);
-        y_slider.setShowTickLabels(true);
-        y_slider.setShowTickMarks(true);
-        y_slider.setMajorTickUnit(25);
+        Slider ySlider = new Slider(-250, 250, 0);
+        ySlider.setShowTickLabels(true);
+        ySlider.setShowTickMarks(true);
+        ySlider.setMajorTickUnit(25);
 
-        Slider z_slider = new Slider(-250, 250, 0);
-        z_slider.setShowTickLabels(true);
-        z_slider.setShowTickMarks(true);
-        z_slider.setMajorTickUnit(25);
+        Slider zSlider = new Slider(-250, 250, 0);
+        zSlider.setShowTickLabels(true);
+        zSlider.setShowTickMarks(true);
+        zSlider.setMajorTickUnit(25);
 
-        Slider r_slider = new Slider(0, 255, 0);
-        r_slider.setShowTickLabels(true);
-        r_slider.setShowTickMarks(true);
+        Slider rSlider = new Slider(0, 255, 0);
+        rSlider.setShowTickLabels(true);
+        rSlider.setShowTickMarks(true);
 
-        Slider g_slider = new Slider(0, 255, 0);
-        g_slider.setShowTickLabels(true);
-        g_slider.setShowTickMarks(true);
+        Slider gSlider = new Slider(0, 255, 0);
+        gSlider.setShowTickLabels(true);
+        gSlider.setShowTickMarks(true);
 
-        Slider b_slider = new Slider(0, 255, 0);
-        b_slider.setShowTickLabels(true);
-        b_slider.setShowTickMarks(true);
+        Slider bSlider = new Slider(0, 255, 0);
+        bSlider.setShowTickLabels(true);
+        bSlider.setShowTickMarks(true);
 
-        Slider radius = new Slider(0, 100, 0);
-        radius.setShowTickLabels(true);
-        radius.setShowTickMarks(true);
-        radius.setMajorTickUnit(2);
-        radius.setMinorTickCount(1);
+        Slider radiusSlider = new Slider(0, 100, 0);
+        radiusSlider.setShowTickLabels(true);
+        radiusSlider.setShowTickMarks(true);
+        radiusSlider.setMajorTickUnit(2);
+        radiusSlider.setMinorTickCount(1);
 
-        Slider camX_slider = new Slider(-250, 250, 0);
-        camX_slider.setShowTickLabels(true);
-        camX_slider.setShowTickMarks(true);
+        Slider azimuthSlider = new Slider(-250, 250, 0);
+        azimuthSlider.setShowTickLabels(true);
+        azimuthSlider.setShowTickMarks(true);
 
-        Slider camY_slider = new Slider(-250, 250, 0);
-        camY_slider.setShowTickLabels(true);
-        camY_slider.setShowTickMarks(true);
-
-        Slider camZ_slider = new Slider(-250, 250, 0);
-        camZ_slider.setShowTickLabels(true);
-        camZ_slider.setShowTickMarks(true);
+        Slider altitudeSlider = new Slider(-250, 250, 0);
+        altitudeSlider.setShowTickLabels(true);
+        altitudeSlider.setShowTickMarks(true);
 
         ToggleGroup tg = new ToggleGroup();
 
@@ -158,55 +154,66 @@ public class Main extends Application {
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
         Label radiusSliderLabel = new Label("radius");
-        Label camXSliderLabel = new Label("Cam x");
-        Label camYSliderLabel = new Label("Cam y");
-        Label camZSliderLabel = new Label("Cam z");
+        Label azimuthSliderLabel = new Label("Cam azimuth");
+        Label altitudeSliderLabel = new Label("Cam altitude");
         Label sphere1Label = new Label("Sphere 1");
         Label sphere2Label = new Label("Sphere 2");
         Label sphere3Label = new Label("Sphere 3");
         Label sphere4Label = new Label("Sphere 4");
         Label sphere5Label = new Label("Sphere 5");
 
-        Button createSphereButton = new Button("Create Sphere");
-        root.add(createSphereButton, 1, 0);
+        // Create sphere location added later
+//        Button createSphereButton = new Button("Create Sphere");
+//        root.add(createSphereButton, 1, 0);
 
+        //Area for select sphere buttons
         FlowPane selectSphereLocation = new FlowPane();
-        selectSphereLocation.setAlignment(Pos.TOP_CENTER);
+        selectSphereLocation.setAlignment(Pos.TOP_LEFT);
         selectSphereLocation.setPrefWrapLength(70);
         selectSphereLocation.getChildren().addAll(sphereButton1, sphere1Label, sphereButton2, sphere2Label, sphereButton3, sphere3Label, sphereButton4, sphere4Label, sphereButton5, sphere5Label);
-        root.add(selectSphereLocation, 2, 0);
+        root.add(selectSphereLocation, 0, 0);
 
-        root.add(view, 0, 0);
-        root.add(xSliderLabel, 0, 1);
-        root.add(x_slider, 0, 2);
+        //Area where you see spheres being rendered
+        root.add(view, 1, 0);
 
-        root.add(ySliderLabel, 0, 3);
-        root.add(y_slider, 0, 4);
+        //Area where sphere sliders will be
+        GridPane sliderLocation = new GridPane();
+        sliderLocation.setAlignment(Pos.TOP_RIGHT);
 
-        root.add(zSliderLabel, 0, 5);
-        root.add(z_slider, 0, 6);
+        sliderLocation.add(xSliderLabel, 0, 0);
+        sliderLocation.add(xSlider, 0, 1);
 
-        root.add(rSliderLabel, 0, 7);
-        root.add(r_slider, 0, 8);
+        sliderLocation.add(ySliderLabel, 0, 2);
+        sliderLocation.add(ySlider, 0, 3);
 
-        root.add(gSliderLabel, 0, 9);
-        root.add(g_slider, 0, 10);
+        sliderLocation.add(zSliderLabel, 0, 4);
+        sliderLocation.add(zSlider, 0, 5);
 
-        root.add(bSliderLabel, 0, 11);
-        root.add(b_slider, 0, 12);
+        sliderLocation.add(rSliderLabel, 0, 6);
+        sliderLocation.add(rSlider, 0, 7);
 
-        root.add(radiusSliderLabel, 0, 13);
-        root.add(radius, 0, 14);
+        sliderLocation.add(gSliderLabel, 0, 8);
+        sliderLocation.add(gSlider, 0, 9);
 
-        root.add(camXSliderLabel, 0, 15);
-        root.add(camX_slider, 0, 16);
+        sliderLocation.add(bSliderLabel, 0, 10);
+        sliderLocation.add(bSlider, 0, 11);
 
-        root.add(camYSliderLabel, 0, 17);
-        root.add(camY_slider, 0, 18);
+        sliderLocation.add(radiusSliderLabel, 0, 12);
+        sliderLocation.add(radiusSlider, 0, 13);
 
-        root.add(camZSliderLabel, 0, 19);
-        root.add(camZ_slider, 0, 20);
+        root.add(sliderLocation, 2, 0);
 
+        //Areas where azimuth and altitude sliders will be
+        GridPane camSliderLocation = new GridPane();
+        camSliderLocation.setAlignment(Pos.BOTTOM_CENTER);
+
+        camSliderLocation.add(azimuthSliderLabel, 0, 0);
+        camSliderLocation.add(azimuthSlider, 0, 1);
+
+        camSliderLocation.add(altitudeSliderLabel, 0, 2);
+        camSliderLocation.add(altitudeSlider, 0, 3);
+
+        root.add(camSliderLocation, 1, 1);
 
         tg.selectedToggleProperty().addListener(
                 new ChangeListener<Toggle>() {
@@ -216,13 +223,13 @@ public class Main extends Application {
                         for (Sphere elem : spheres) {
                             try {
                                 if (elem.getLinkedButton().isSelected()) {
-                                    x_slider.setValue(elem.getSphereX());
-                                    y_slider.setValue(elem.getSphereY());
-                                    z_slider.setValue(elem.getSphereZ());
-                                    r_slider.setValue((elem.getSphereR() * 255));
-                                    g_slider.setValue((elem.getSphereG() * 255));
-                                    b_slider.setValue((elem.getSphereB() * 255));
-                                    radius.setValue(elem.getSphereRadius());
+                                    xSlider.setValue(elem.getSphereX());
+                                    ySlider.setValue(elem.getSphereY());
+                                    zSlider.setValue(elem.getSphereZ());
+                                    rSlider.setValue((elem.getSphereR() * 255));
+                                    rSlider.setValue((elem.getSphereG() * 255));
+                                    bSlider.setValue((elem.getSphereB() * 255));
+                                    radiusSlider.setValue(elem.getSphereRadius());
 
                                     elem.setSelect(true);
                                 } else {
@@ -237,7 +244,7 @@ public class Main extends Application {
                 });
 
         //Add all the event handlers
-        x_slider.valueProperty().addListener(
+        xSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -254,7 +261,7 @@ public class Main extends Application {
                     }
                 });
 
-        y_slider.valueProperty().addListener(
+        ySlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -271,7 +278,7 @@ public class Main extends Application {
                     }
                 });
 
-        z_slider.valueProperty().addListener(
+        zSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -287,7 +294,7 @@ public class Main extends Application {
                         }
                     }
                 });
-        r_slider.valueProperty().addListener(
+        rSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -303,7 +310,7 @@ public class Main extends Application {
                         }
                     }
                 });
-        g_slider.valueProperty().addListener(
+        gSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -319,7 +326,7 @@ public class Main extends Application {
                         }
                     }
                 });
-        b_slider.valueProperty().addListener(
+        bSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -336,7 +343,7 @@ public class Main extends Application {
                     }
                 });
 
-        radius.valueProperty().addListener(
+        radiusSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -353,7 +360,7 @@ public class Main extends Application {
                     }
                 });
 
-        camX_slider.valueProperty().addListener(
+        azimuthSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -363,7 +370,7 @@ public class Main extends Application {
                     }
                 });
 
-        camY_slider.valueProperty().addListener(
+        altitudeSlider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
@@ -372,17 +379,6 @@ public class Main extends Application {
                         Render(image);
                     }
                 });
-
-        camZ_slider.valueProperty().addListener(
-                new ChangeListener<Number>() {
-                    public void changed(ObservableValue<? extends Number>
-                                                observable, Number oldValue, Number newValue) {
-
-                        camZValue = newValue.intValue();
-                        Render(image);
-                    }
-                });
-
 
         //The following is in case you want to interact with the image in any way
         //e.g., for user interaction, or you can find out the pixel position for
