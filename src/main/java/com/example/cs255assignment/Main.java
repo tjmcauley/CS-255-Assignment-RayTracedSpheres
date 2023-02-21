@@ -389,6 +389,14 @@ public class Main extends Application {
         PixelWriter image_writer = image.getPixelWriter();
         int closestTIndex = -1;
 
+        //Variables for calculating the camera's position
+        //VPN - LookAt - VRP
+        //VPN.normalise()
+        //VRV = VPN.CrossProduuct(VUV)
+        //VRV.normalise()
+        //VUV = VRV.CrossProduct(VPN)
+        //VUV.normalise()
+
         Vector points;
         double lineIntersectionWithSphere = 0;
         Vector rayFromCenterOfSphereToOriginOfLine;
