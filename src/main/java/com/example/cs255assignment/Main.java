@@ -55,19 +55,18 @@ public class Main extends Application {
     static int Height = 500;
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
-    Sphere sphere1 = new Sphere(0, 0, 100, 255, 255, 255, 75);
-    //    Sphere sphere2 = new Sphere(-200, -100, 100, 255, 0, 0, 75);
+    Sphere sphere1 = new Sphere(0, 0, 0, 255, 255, 255, 75);
+    Sphere sphere2 = new Sphere(0, 0, 200, 255, 0, 0, 75);
 //    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
 //    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
 //    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
-    double camXValue = 0;
-    double camYValue = 0;
-    double camZValue = 0;
+
+    Camera camera = new Camera(0, 0, 100);
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         spheres.add(sphere1);
-//        spheres.add(sphere2);
+        spheres.add(sphere2);
 //        spheres.add(sphere3);
 //        spheres.add(sphere4);
 //        spheres.add(sphere5);
@@ -113,11 +112,11 @@ public class Main extends Application {
         radiusSlider.setMajorTickUnit(2);
         radiusSlider.setMinorTickCount(1);
 
-        Slider azimuthSlider = new Slider(-250, 250, 0);
+        Slider azimuthSlider = new Slider(2 * -Math.PI, 2 * Math.PI, 0);
         azimuthSlider.setShowTickLabels(true);
         azimuthSlider.setShowTickMarks(true);
 
-        Slider altitudeSlider = new Slider(-250, 250, 0);
+        Slider altitudeSlider = new Slider(-Math.PI, Math.PI, 0);
         altitudeSlider.setShowTickLabels(true);
         altitudeSlider.setShowTickMarks(true);
 
@@ -129,7 +128,7 @@ public class Main extends Application {
 
         RadioButton sphereButton2 = new RadioButton();
         sphereButton2.setToggleGroup(tg);
-        //sphere2.setRadioButton(sphereButton2);
+        sphere2.setRadioButton(sphereButton2);
 
         RadioButton sphereButton3 = new RadioButton();
         sphereButton3.setToggleGroup(tg);
@@ -365,7 +364,14 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
 
-                        camXValue = newValue.intValue();
+                        //l = long of camera
+                        //d = long of sphere
+                        //t = difference between camera long and sphere long
+                        //altitude h = asin(sin(l) * sin(d) + cos(l) * cos(d) * cos(t))
+                        //azimuth z = asin(cos(d) * sin(t) / cos(h))
+
+                        camera.setAzimuth(newValue.intValue());
+                        camera.updateCameraVectors();
                         Render(image);
                     }
                 });
@@ -375,7 +381,8 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
 
-                        camYValue = newValue.intValue();
+                        camera.setAltitude(newValue.intValue());
+                        camera.updateCameraVRP();
                         Render(image);
                     }
                 });
@@ -406,21 +413,6 @@ public class Main extends Application {
         PixelWriter image_writer = image.getPixelWriter();
         int closestTIndex = 0;
 
-        //Variables for calculating the camera's position
-        Vector vrp = new Vector(0, 0, 0);
-        Vector vuv = new Vector(0, 1, 0);
-        Vector lookAt = new Vector(0, 0, 1);
-
-        //Cam z value
-        Vector vpn = lookAt.sub(vrp);
-        vpn.normalise();
-        //Cam x value
-        Vector vrv = vpn.crossProduct(vuv);
-        vrv.normalise();
-        //Cam y value
-        vuv = vrv.crossProduct(vpn);
-        vuv.normalise();
-
         Vector points;
         double lineIntersectionWithSphere;
         Vector rayFromCenterOfSphereToOriginOfLine;
@@ -430,20 +422,24 @@ public class Main extends Application {
         double b;
         double c;
         Color col;
+        Vector rayDirection = new Vector(0, 0, 1);
+        camera.updateCameraVRP();
 
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
-                vrp.x = ((w - i) - w / 2) + camXValue;
-                vrp.y = ((h - j) - h / 2) + camYValue;
-                vrp.z = vrp.z + camZValue;
+                double u = ((w - i) - w / 2);
+                double v = ((h - j) - h / 2);
+                Vector rayOrigin = camera.getVRP().add(camera.getVRV().mul(u)).add(camera.getVUV().mul(v));
                 double closestT = 1000000;
                 image_writer.setColor(i, j, Color.color(0, 0, 0, 1));
+                camera.updateCameraVectors();
+
                 //Another for loop going through each sphere
                 //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
                 for (int s = 0; s < spheres.size(); s++) {
-                    rayFromCenterOfSphereToOriginOfLine = vrp.sub(spheres.get(s));
-                    a = lookAt.dot(lookAt);
-                    b = rayFromCenterOfSphereToOriginOfLine.dot(lookAt) * 2;
+                    rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(spheres.get(s));
+                    a = rayDirection.dot(rayDirection);
+                    b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
                     c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
 
                     //Calculate if light hits sphere
@@ -462,7 +458,7 @@ public class Main extends Application {
                         }
                     }
                     //Could add shadows if you're gutsy
-                    points = vrp.add(lookAt.mul(lineIntersectionWithSphere));
+                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
                     Vector lv = light.sub(points);
                     lv.normalise();
                     Vector n = points.sub(spheres.get(closestTIndex));
