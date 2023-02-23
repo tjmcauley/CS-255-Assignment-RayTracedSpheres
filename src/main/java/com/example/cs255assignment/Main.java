@@ -365,7 +365,7 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
 
-                        rayDirection.setY(newValue.intValue()/255);
+                        //rayDirection.setY(newValue.intValue()/255);
                             Render(image);
                         }
                 });
@@ -440,7 +440,7 @@ public class Main extends Application {
                     //System.out.print(closestTIndex);
                     //System.out.println("Hit");
                 }
-                else{
+                else {
                     if (closestT < 0) {
                         closestT = ((-b + sqrt(disc)) / 2 * a);
                         if (closestT < 0) {
@@ -451,10 +451,12 @@ public class Main extends Application {
                         points = rayOrigin.add(rayDirection.mul(closestT));
                         Vector lv = light.sub(points);
                         lv.normalise();
-                        Vector n = points.sub(spheres.get(closestTIndex).getCos());
-                        n.normalise();
 
+                        Vector n = points.sub(spheres.get(closestTIndex).getCOS());
+
+                        n.normalise();
                         double dp = lv.dot(n);
+
 
                         if (dp < 0) {
                             dp = 0;
@@ -468,6 +470,7 @@ public class Main extends Application {
 
                         col = Color.color(dc.x, dc.y, dc.z, 1);
                         image_writer.setColor(i, j, col);
+
                 }
             }
         }
