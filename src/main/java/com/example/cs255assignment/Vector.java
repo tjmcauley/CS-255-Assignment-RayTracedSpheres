@@ -35,8 +35,10 @@ public class Vector {
     }
 
     public Vector crossProduct(Vector a) {
-        return new Vector(y * a.z - a.y * z, a.x * z - x * a.z, x * a.y - a.x - y);
+        return new Vector (y*a.z-z*a.y, z*a.x-x*a.z, x*a.y-y*a.x);
     }
+
+
     public void print() {
         System.out.println("x=" + x + ", y=" + y + ", z=" + z);
     }

@@ -62,7 +62,7 @@ public class Main extends Application {
 //    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
 //    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
 
-    Camera camera = new Camera(0, 0, -100);
+    Camera camera = new Camera(0, 0, -200);
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
@@ -113,11 +113,11 @@ public class Main extends Application {
         radius.setMajorTickUnit(2);
         radius.setMinorTickCount(1);
 
-        Slider azimuthSlider = new Slider(0, Math.PI, 0);
+        Slider azimuthSlider = new Slider(0, 2 * Math.PI, 0);
         azimuthSlider.setShowTickLabels(true);
         azimuthSlider.setShowTickMarks(true);
 
-        Slider altitudeSlider = new Slider(0, Math.PI, 0);
+        Slider altitudeSlider = new Slider(0,2 *  Math.PI, 0);
         altitudeSlider.setShowTickLabels(true);
         altitudeSlider.setShowTickMarks(true);
 
@@ -422,7 +422,6 @@ public class Main extends Application {
                     a = camera.getVPN().dot(camera.getVPN());
                     b = rayFromCenterOfSphereToOriginOfLine.dot(camera.getVPN()) * 2;
                     c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
-
                     disc = (b * b) - (4 * a * c);
 
                     if (disc > 0) {
@@ -436,8 +435,7 @@ public class Main extends Application {
 
                 if (closestTIndex == -1) {
                     image_writer.setColor(i, j, Color.GRAY);
-                    //System.out.print(closestTIndex);
-                    //System.out.println("Hit");
+
                 } else {
                     if (closestT < 0) {
                         closestT = ((-b + sqrt(disc)) / 2 * a);
@@ -449,12 +447,9 @@ public class Main extends Application {
                     points = rayOrigin.add(camera.getVPN().mul(closestT));
                     Vector lv = light.sub(points);
                     lv.normalise();
-
                     Vector n = points.sub(spheres.get(closestTIndex).getCos());
-
                     n.normalise();
                     double dp = lv.dot(n);
-
 
                     if (dp < 0) {
                         dp = 0;
