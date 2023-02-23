@@ -112,11 +112,11 @@ public class Main extends Application {
         radiusSlider.setMajorTickUnit(2);
         radiusSlider.setMinorTickCount(1);
 
-        Slider azimuthSlider = new Slider(2 * -Math.PI, 2 * Math.PI, 0);
+        Slider azimuthSlider = new Slider(2 * -Math.PI, 2 * Math.PI, 2 * -Math.PI);
         azimuthSlider.setShowTickLabels(true);
         azimuthSlider.setShowTickMarks(true);
 
-        Slider altitudeSlider = new Slider(-Math.PI, Math.PI, 0);
+        Slider altitudeSlider = new Slider(-Math.PI, Math.PI, -Math.PI);
         altitudeSlider.setShowTickLabels(true);
         altitudeSlider.setShowTickMarks(true);
 
@@ -370,7 +370,7 @@ public class Main extends Application {
                         //altitude h = asin(sin(l) * sin(d) + cos(l) * cos(d) * cos(t))
                         //azimuth z = asin(cos(d) * sin(t) / cos(h))
 
-                        camera.setAzimuth(newValue.intValue());
+                        camera.setAzimuth(newValue.doubleValue());
                         camera.updateCameraVRP();
                         Render(image);
                     }
@@ -381,7 +381,7 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
 
-                        camera.setAltitude(newValue.intValue());
+                        camera.setAltitude(newValue.doubleValue());
                         camera.updateCameraVRP();
                         Render(image);
                     }

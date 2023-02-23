@@ -31,6 +31,7 @@ public class Camera {
     public void updateCameraVRP() {
         //Calc vrp.x vrp.y vrp.z with distance
         double calcAzimuth = this.distance * cos(this.azimuth);
+        //System.out.println(calcAzimuth);
         double calcAltitude = this.distance * sin(this.azimuth) * cos(this.altitude);
         double calcDistance = this.distance * sin(this.azimuth) * sin(this.altitude);
 
