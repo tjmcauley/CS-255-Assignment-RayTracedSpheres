@@ -10,9 +10,9 @@ public class Camera {
     Vector vuv = new Vector(0, 1, 0);
     Vector lookAt = new Vector(0, 0, 0);
     Vector vrv = new Vector(1, 0, 0);
-    Vector vpn = new Vector(0, 0, 1);
+    Vector vpn;
 
-    public Camera (double azimuth, double altitude, double distance) {
+    public Camera(double azimuth, double altitude, double distance) {
         this.azimuth = azimuth;
         this.altitude = altitude;
         this.distance = distance;
@@ -30,10 +30,9 @@ public class Camera {
 
     public void updateCameraVRP() {
         //Calc vrp.x vrp.y vrp.z with distance
-        double calcAzimuth = this.distance * cos(this.azimuth);
-        //System.out.println(calcAzimuth);
-        double calcAltitude = this.distance * sin(this.azimuth) * cos(this.altitude);
-        double calcDistance = this.distance * sin(this.azimuth) * sin(this.altitude);
+        double calcAzimuth = this.distance * sin(this.altitude) * sin(this.azimuth);
+        double calcAltitude = this.distance * cos(this.altitude);
+        double calcDistance = this.distance * sin(this.altitude) * cos(this.azimuth);
 
         this.vrp.x = calcAzimuth;
         this.vrp.y = calcAltitude;

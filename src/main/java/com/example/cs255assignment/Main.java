@@ -56,7 +56,7 @@ public class Main extends Application {
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(0, 0, 0, 255, 255, 255, 75);
-    Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
+//    Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
 //    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
 //    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
 //    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
@@ -66,7 +66,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         spheres.add(sphere1);
-        spheres.add(sphere2);
+//        spheres.add(sphere2);
 //        spheres.add(sphere3);
 //        spheres.add(sphere4);
 //        spheres.add(sphere5);
@@ -112,11 +112,11 @@ public class Main extends Application {
         radiusSlider.setMajorTickUnit(2);
         radiusSlider.setMinorTickCount(1);
 
-        Slider azimuthSlider = new Slider(2 * -Math.PI, 2 * Math.PI, 2 * -Math.PI);
+        Slider azimuthSlider = new Slider(2 * -Math.PI, 2 * Math.PI, 0);
         azimuthSlider.setShowTickLabels(true);
         azimuthSlider.setShowTickMarks(true);
 
-        Slider altitudeSlider = new Slider(-Math.PI, Math.PI, -Math.PI);
+        Slider altitudeSlider = new Slider(-Math.PI, Math.PI, 0);
         altitudeSlider.setShowTickLabels(true);
         altitudeSlider.setShowTickMarks(true);
 
@@ -128,7 +128,7 @@ public class Main extends Application {
 
         RadioButton sphereButton2 = new RadioButton();
         sphereButton2.setToggleGroup(tg);
-        sphere2.setRadioButton(sphereButton2);
+//        sphere2.setRadioButton(sphereButton2);
 
         RadioButton sphereButton3 = new RadioButton();
         sphereButton3.setToggleGroup(tg);
@@ -406,7 +406,7 @@ public class Main extends Application {
     public void Render(WritableImage image) {
 
         //Variables for calculating which parts of the spheres to render
-        Vector light = new Vector(0, 0, -250);
+        Vector light = new Vector(0, 0, -100);
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
         int closestTIndex = 0;
