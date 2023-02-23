@@ -56,7 +56,7 @@ public class Main extends Application {
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(0, 0, 0, 255, 255, 255, 75);
-    Sphere sphere2 = new Sphere(0, 0, 200, 255, 0, 0, 75);
+    Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
 //    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
 //    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
 //    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
@@ -371,7 +371,7 @@ public class Main extends Application {
                         //azimuth z = asin(cos(d) * sin(t) / cos(h))
 
                         camera.setAzimuth(newValue.intValue());
-                        camera.updateCameraVectors();
+                        camera.updateCameraVRP();
                         Render(image);
                     }
                 });
@@ -406,8 +406,6 @@ public class Main extends Application {
     public void Render(WritableImage image) {
 
         //Variables for calculating which parts of the spheres to render
-//        Vector rayOrigin = new Vector(0, 0, 0);
-//        Vector rayDirection = new Vector(0, 0, 1);
         Vector light = new Vector(0, 0, -250);
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
@@ -422,24 +420,22 @@ public class Main extends Application {
         double b;
         double c;
         Color col;
-        Vector rayDirection = new Vector(0, 0, 1);
-        camera.updateCameraVRP();
 
         for (j = 0; j < h; j++) {
             for (i = 0; i < w; i++) {
                 double u = ((w - i) - w / 2);
                 double v = ((h - j) - h / 2);
                 Vector rayOrigin = camera.getVRP().add(camera.getVRV().mul(u)).add(camera.getVUV().mul(v));
-                double closestT = 1000000;
-                image_writer.setColor(i, j, Color.color(0, 0, 0, 1));
                 camera.updateCameraVectors();
 
+                double closestT = 1000000;
+                image_writer.setColor(i, j, Color.color(0, 0, 0, 1));
                 //Another for loop going through each sphere
                 //Which sphere is closest? - index to closest sphere so far (smallest positive t value)
                 for (int s = 0; s < spheres.size(); s++) {
                     rayFromCenterOfSphereToOriginOfLine = rayOrigin.sub(spheres.get(s));
-                    a = rayDirection.dot(rayDirection);
-                    b = rayFromCenterOfSphereToOriginOfLine.dot(rayDirection) * 2;
+                    a = camera.getVPN().dot(camera.getVPN());
+                    b = rayFromCenterOfSphereToOriginOfLine.dot(camera.getVPN()) * 2;
                     c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
 
                     //Calculate if light hits sphere
@@ -458,7 +454,7 @@ public class Main extends Application {
                         }
                     }
                     //Could add shadows if you're gutsy
-                    points = rayOrigin.add(rayDirection.mul(lineIntersectionWithSphere));
+                    points = rayOrigin.add(camera.getVPN().mul(lineIntersectionWithSphere));
                     Vector lv = light.sub(points);
                     lv.normalise();
                     Vector n = points.sub(spheres.get(closestTIndex));
