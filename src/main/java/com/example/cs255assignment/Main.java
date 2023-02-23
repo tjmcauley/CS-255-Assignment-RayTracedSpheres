@@ -56,17 +56,17 @@ public class Main extends Application {
     ArrayList<Sphere> spheres = new ArrayList<>();
     ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(0, 0, 0, 255, 255, 255, 75);
-//    Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
+    Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
 //    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
 //    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
 //    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
 
-    Camera camera = new Camera(0, 0, 100);
+    Camera camera = new Camera(0, 0, -100);
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
         spheres.add(sphere1);
-//        spheres.add(sphere2);
+        spheres.add(sphere2);
 //        spheres.add(sphere3);
 //        spheres.add(sphere4);
 //        spheres.add(sphere5);
@@ -128,7 +128,7 @@ public class Main extends Application {
 
         RadioButton sphereButton2 = new RadioButton();
         sphereButton2.setToggleGroup(tg);
-//        sphere2.setRadioButton(sphereButton2);
+        sphere2.setRadioButton(sphereButton2);
 
         RadioButton sphereButton3 = new RadioButton();
         sphereButton3.setToggleGroup(tg);
@@ -406,7 +406,7 @@ public class Main extends Application {
     public void Render(WritableImage image) {
 
         //Variables for calculating which parts of the spheres to render
-        Vector light = new Vector(0, 0, -100);
+        Vector light = new Vector(0, 0, -300);
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
         PixelWriter image_writer = image.getPixelWriter();
         int closestTIndex = 0;
