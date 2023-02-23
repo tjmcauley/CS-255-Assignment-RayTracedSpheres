@@ -14,6 +14,7 @@ public class Sphere extends Vector {
     private int radius;
     private RadioButton radioButton;
     private boolean selected = false;
+    private Vector cos;
 
     private double smallestT;
 
@@ -30,6 +31,7 @@ public class Sphere extends Vector {
         this.b = b;
         this.radius = radius;
         this.selected = false;
+        this.cos = new Vector(x,y,z);
     }
 
     public void setSphereX(int x) {
@@ -109,10 +111,7 @@ public class Sphere extends Vector {
     }
 
     public Boolean isLinked() {
-        if (this.radioButton == null) {
-            return false;
-        }
-        return true;
+        return this.radioButton != null;
     }
 
     public Boolean isSelected() {
@@ -121,6 +120,9 @@ public class Sphere extends Vector {
 
     public void setSmallestT(double smallestT) {
         this.smallestT = smallestT;
+    }
+    public Vector getCOS(){
+        return this.cos;
     }
 
     public double getSmallestT() {
