@@ -113,11 +113,11 @@ public class Main extends Application {
         radius.setMajorTickUnit(2);
         radius.setMinorTickCount(1);
 
-        Slider azimuthSlider = new Slider(0, 2 * Math.PI, 0);
+        Slider azimuthSlider = new Slider(- Math.PI,  Math.PI, 0);
         azimuthSlider.setShowTickLabels(true);
         azimuthSlider.setShowTickMarks(true);
 
-        Slider altitudeSlider = new Slider(0,2 *  Math.PI, 0);
+        Slider altitudeSlider = new Slider(-Math.PI, Math.PI, 0);
         altitudeSlider.setShowTickLabels(true);
         altitudeSlider.setShowTickMarks(true);
 
