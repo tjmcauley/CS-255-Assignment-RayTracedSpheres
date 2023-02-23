@@ -121,7 +121,7 @@ public class Sphere extends Vector {
     public void setSmallestT(double smallestT) {
         this.smallestT = smallestT;
     }
-    public Vector getCOS(){
+    public Vector getCos(){
         return this.cos;
     }
 
