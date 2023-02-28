@@ -3,16 +3,16 @@ package com.example.cs255assignment;
 import static java.lang.Math.*;
 
 public class Camera {
-    double azimuth;
-    double altitude;
-    double distance;
+    float azimuth;
+    float altitude;
+    float distance;
     Vector vrp = new Vector(0, 0, 0);
     Vector vuv = new Vector(0, 1, 0);
     Vector lookAt = new Vector(0, 0, 0);
     Vector vrv = new Vector(1, 0, 0);
     Vector vpn;
 
-    public Camera(double azimuth, double altitude, double distance) {
+    public Camera(float azimuth, float altitude, float distance) {
         this.azimuth = azimuth;
         this.altitude = altitude;
         this.distance = distance;
@@ -20,11 +20,11 @@ public class Camera {
         updateCameraVectors();
     }
 
-    public void setAzimuth(double azimuth) {
+    public void setAzimuth(float azimuth) {
         this.azimuth = azimuth;
     }
 
-    public void setAltitude(double altitude) {
+    public void setAltitude(float altitude) {
         this.altitude = altitude;
     }
 

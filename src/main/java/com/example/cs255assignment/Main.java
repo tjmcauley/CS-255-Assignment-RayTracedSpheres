@@ -146,8 +146,6 @@ public class Main extends Application {
         GridPane root = new GridPane();
 
         root.setVgap(0.5);
-        root.add(azimuthSlider, 2, 1);
-        root.add(altitudeSlider, 2, 2);
         //3. (referring to the 3 things we need to display an image)
         //we need to add it to the pane
         Label xSliderLabel = new Label("X coord");
@@ -156,46 +154,53 @@ public class Main extends Application {
         Label rSliderLabel = new Label("R");
         Label gSliderLabel = new Label("G");
         Label bSliderLabel = new Label("B");
+        Label azimuthSliderLabel = new Label("Azimuth");
+        Label altitudeSliderLabel = new Label("Altitude");
+
         Label radiusSliderLabel = new Label("radius");
-        Label camXSliderLabel = new Label("Cam x");
-        Label camYSliderLabel = new Label("Cam y");
-        Label camZSliderLabel = new Label("Cam z");
         Label sphere1Label = new Label("Sphere 1");
         Label sphere2Label = new Label("Sphere 2");
         Label sphere3Label = new Label("Sphere 3");
         Label sphere4Label = new Label("Sphere 4");
         Label sphere5Label = new Label("Sphere 5");
 
+        VBox camSliderLocation = new VBox();
+        camSliderLocation.setAlignment(Pos.TOP_CENTER);
         Button createSphereButton = new Button("Create Sphere");
-        root.add(createSphereButton, 1, 0);
+        camSliderLocation.getChildren().addAll(createSphereButton, azimuthSliderLabel, azimuthSlider, altitudeSliderLabel, altitudeSlider);
+        root.add(camSliderLocation, 1, 1);
 
         FlowPane selectSphereLocation = new FlowPane();
         selectSphereLocation.setAlignment(Pos.TOP_CENTER);
         selectSphereLocation.setPrefWrapLength(70);
         selectSphereLocation.getChildren().addAll(sphereButton1, sphere1Label, sphereButton2, sphere2Label, sphereButton3, sphere3Label, sphereButton4, sphere4Label, sphereButton5, sphere5Label);
-        root.add(selectSphereLocation, 2, 0);
+        root.add(selectSphereLocation, 0, 0);
 
-        root.add(view, 0, 0);
-        root.add(xSliderLabel, 0, 1);
-        root.add(x_slider, 0, 2);
+        root.add(view, 1, 0);
 
-        root.add(ySliderLabel, 0, 3);
-        root.add(y_slider, 0, 4);
+        GridPane sphereSliderLocation = new GridPane();
+        sphereSliderLocation.add(xSliderLabel, 0, 0);
+        sphereSliderLocation.add(x_slider, 0, 1);
 
-        root.add(zSliderLabel, 0, 5);
-        root.add(z_slider, 0, 6);
+        sphereSliderLocation.add(ySliderLabel, 0, 2);
+        sphereSliderLocation.add(y_slider, 0, 3);
 
-        root.add(rSliderLabel, 0, 7);
-        root.add(r_slider, 0, 8);
+        sphereSliderLocation.add(zSliderLabel, 0, 4);
+        sphereSliderLocation.add(z_slider, 0, 5);
 
-        root.add(gSliderLabel, 0, 9);
-        root.add(g_slider, 0, 10);
+        sphereSliderLocation.add(rSliderLabel, 0, 6);
+        sphereSliderLocation.add(r_slider, 0, 7);
 
-        root.add(bSliderLabel, 0, 11);
-        root.add(b_slider, 0, 12);
+        sphereSliderLocation.add(gSliderLabel, 0, 8);
+        sphereSliderLocation.add(g_slider, 0, 9);
 
-        root.add(radiusSliderLabel, 0, 13);
-        root.add(radius, 0, 14);
+        sphereSliderLocation.add(bSliderLabel, 0, 10);
+        sphereSliderLocation.add(b_slider, 0, 11);
+
+        sphereSliderLocation.add(radiusSliderLabel, 0, 12);
+        sphereSliderLocation.add(radius, 0, 13);
+
+        root.add(sphereSliderLocation, 2, 0);
 
         tg.selectedToggleProperty().addListener(
                 new ChangeListener<Toggle>() {
@@ -356,7 +361,7 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
 
-                        camera.setAzimuth(newValue.doubleValue());
+                        camera.setAzimuth(newValue.floatValue());
                         camera.updateCameraVRP();
                         Render(image);
                     }
@@ -367,7 +372,7 @@ public class Main extends Application {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
 
-                        camera.setAltitude(newValue.doubleValue());
+                        camera.setAltitude(newValue.floatValue());
                         camera.updateCameraVRP();
                         Render(image);
                     }
