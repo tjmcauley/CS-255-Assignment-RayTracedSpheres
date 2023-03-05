@@ -154,8 +154,7 @@ public class Main extends Application {
 
         VBox camSliderLocation = new VBox();
         camSliderLocation.setAlignment(Pos.TOP_CENTER);
-        Button createSphereButton = new Button("Create Sphere");
-        camSliderLocation.getChildren().addAll(createSphereButton, azimuthSliderLabel, azimuthSlider, altitudeSliderLabel, altitudeSlider);
+        camSliderLocation.getChildren().addAll(azimuthSliderLabel, azimuthSlider, altitudeSliderLabel, altitudeSlider);
         root.add(camSliderLocation, 1, 1);
 
         FlowPane selectSphereLocation = new FlowPane();
