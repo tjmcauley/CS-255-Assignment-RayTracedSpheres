@@ -50,6 +50,7 @@ import javafx.geometry.HPos;
 
 import static java.lang.Math.sqrt;
 
+//This is the main class
 public class Main extends Application {
     Vector rayDirection = new Vector(0, 0, 1);
     static int Width = 400;
