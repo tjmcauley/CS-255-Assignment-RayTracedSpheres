@@ -46,14 +46,14 @@ import static java.lang.Math.sqrt;
  * Main class that renders 5 sphere vectors with ambient and diffuse lighting in a 3D space
  */
 public class Main extends Application {
-    static int Width = 400;
-    static int Height = 400;
+    static int Width = 600;
+    static int Height = 600;
     ArrayList<Sphere> spheres = new ArrayList<>();
     Sphere sphere1 = new Sphere(0, 0, 0, 255, 255, 255, 75);
-    Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
-    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
-    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
-    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
+    Sphere sphere2 = new Sphere(0, 200, 0, 255, 0, 0, 75);
+    Sphere sphere3 = new Sphere(0, -200, 0, 0, 0, 255, 75);
+    Sphere sphere4 = new Sphere(200, 0, 0, 0, 255, 0, 75);
+    Sphere sphere5 = new Sphere(-200, 0, 0, 255, 0, 255, 75);
     Camera camera = new Camera(0, 0, -200);
 
     @Override
