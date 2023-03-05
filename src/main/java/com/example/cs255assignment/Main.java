@@ -56,12 +56,12 @@ public class Main extends Application {
     static int Width = 400;
     static int Height = 400;
     ArrayList<Sphere> spheres = new ArrayList<>();
-    ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
+    //ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(0, 0, 0, 255, 255, 255, 75);
     Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
-//    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
-//    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
-//    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
+    Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
+    Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
+    Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
 
     Camera camera = new Camera(0, 0, -200);
 
@@ -69,9 +69,9 @@ public class Main extends Application {
     public void start(Stage stage) throws FileNotFoundException {
         spheres.add(sphere1);
         spheres.add(sphere2);
-//        spheres.add(sphere3);
-//        spheres.add(sphere4);
-//        spheres.add(sphere5);
+        spheres.add(sphere3);
+        spheres.add(sphere4);
+        spheres.add(sphere5);
 
         stage.setTitle("Ray Tracing");
         //We need 3 things to see an image
@@ -118,7 +118,7 @@ public class Main extends Application {
         azimuthSlider.setShowTickLabels(true);
         azimuthSlider.setShowTickMarks(true);
 
-        Slider altitudeSlider = new Slider(-Math.PI, Math.PI, 0);
+        Slider altitudeSlider = new Slider(-360, 360, 0);
         altitudeSlider.setShowTickLabels(true);
         altitudeSlider.setShowTickMarks(true);
 
@@ -134,15 +134,15 @@ public class Main extends Application {
 
         RadioButton sphereButton3 = new RadioButton();
         sphereButton3.setToggleGroup(tg);
-//        sphere3.setRadioButton(sphereButton3);
+        sphere3.setRadioButton(sphereButton3);
 
         RadioButton sphereButton4 = new RadioButton();
         sphereButton4.setToggleGroup(tg);
-//        sphere4.setRadioButton(sphereButton4);
+        sphere4.setRadioButton(sphereButton4);
 
         RadioButton sphereButton5 = new RadioButton();
         sphereButton5.setToggleGroup(tg);
-//        sphere5.setRadioButton(sphereButton5);
+        sphere5.setRadioButton(sphereButton5);
 
         GridPane root = new GridPane();
 
@@ -363,7 +363,7 @@ public class Main extends Application {
                                                 observable, Number oldValue, Number newValue) {
 
                         camera.setAzimuth(newValue.floatValue());
-                        camera.updateCameraVRP();
+                        camera.updateCameraAzimuth();
                         Render(image);
                     }
                 });
@@ -374,7 +374,7 @@ public class Main extends Application {
                                                 observable, Number oldValue, Number newValue) {
 
                         camera.setAltitude(newValue.floatValue());
-                        camera.updateCameraVRP();
+                        camera.updateCameraAltitude();
                         Render(image);
                     }
                 });
