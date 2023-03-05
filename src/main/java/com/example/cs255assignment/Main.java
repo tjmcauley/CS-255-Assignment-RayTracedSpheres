@@ -1,14 +1,4 @@
 package com.example.cs255assignment;
-/*
-CS-255 Getting started code for the assignment
-I do not give you permission to post this code online
-Do not post your solution online
-Do not copy code
-Do not use JavaFX functions or other libraries to do the main parts of the
-assignment (i.e. ray tracing steps 1-7)
-All of those functions must be written by yourself
-You may use libraries to achieve a better GUI
-*/
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -50,19 +40,20 @@ import javafx.geometry.HPos;
 
 import static java.lang.Math.sqrt;
 
-//This is the main class
+/**
+ * @author Thomas McAuley, Cellan Lees
+ *
+ * Main class that renders 5 sphere vectors with ambient and diffuse lighting in a 3D space
+ */
 public class Main extends Application {
-    Vector rayDirection = new Vector(0, 0, 1);
     static int Width = 400;
     static int Height = 400;
     ArrayList<Sphere> spheres = new ArrayList<>();
-    //ArrayList<RadioButton> sphereSelectButtons = new ArrayList<>();
     Sphere sphere1 = new Sphere(0, 0, 0, 255, 255, 255, 75);
     Sphere sphere2 = new Sphere(0, 0, 0, 255, 0, 0, 75);
     Sphere sphere3 = new Sphere(-50, -100, 200, 0, 0, 255, 75);
     Sphere sphere4 = new Sphere(-200, -150, 250, 0, 255, 0, 75);
     Sphere sphere5 = new Sphere(-200, -200, -150, 255, 0, 255, 75);
-
     Camera camera = new Camera(0, 0, -200);
 
     @Override
@@ -74,13 +65,10 @@ public class Main extends Application {
         spheres.add(sphere5);
 
         stage.setTitle("Ray Tracing");
-        //We need 3 things to see an image
-        //1. We create an image we can write to
         WritableImage image = new WritableImage(Width, Height);
-        //2. We create a view of that image
         ImageView view = new ImageView(image);
-        //3. Add to the pane (below)
-        //Create the simple GUI
+
+        //Build GUI
         Slider x_slider = new Slider(-250, 250, 0);
         x_slider.setShowTickLabels(true);
         x_slider.setShowTickMarks(true);
@@ -147,8 +135,7 @@ public class Main extends Application {
         GridPane root = new GridPane();
 
         root.setVgap(0.5);
-        //3. (referring to the 3 things we need to display an image)
-        //we need to add it to the pane
+
         Label xSliderLabel = new Label("X coord");
         Label ySliderLabel = new Label("Y coord");
         Label zSliderLabel = new Label("Z coord");
@@ -203,6 +190,7 @@ public class Main extends Application {
 
         root.add(sphereSliderLocation, 2, 0);
 
+        //Event handlers
         tg.selectedToggleProperty().addListener(
                 new ChangeListener<Toggle>() {
                     public void changed(ObservableValue<? extends Toggle>
@@ -237,7 +225,6 @@ public class Main extends Application {
                     }
                 });
 
-        //Add all the event handlers
         x_slider.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>
@@ -379,9 +366,7 @@ public class Main extends Application {
                     }
                 });
 
-        //The following is in case you want to interact with the image in any way
-        //e.g., for user interaction, or you can find out the pixel position for
-        //debugging
+        //Click image for debugging
         view.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event ->
         {
             System.out.println(event.getX() + " " + event.getY());
@@ -396,7 +381,6 @@ public class Main extends Application {
     }
 
     public void Render(WritableImage image) {
-
         //Variables for calculating which parts of the spheres to render
         Vector light = new Vector(0, 0, -300);
         int w = (int) image.getWidth(), h = (int) image.getHeight(), i, j;
@@ -407,15 +391,14 @@ public class Main extends Application {
         double lineIntersectionWithSphere = 0;
         Vector rayFromCenterOfSphereToOriginOfLine;
         double disc = 0;
-        double hit;
 
         //a, b, and c components of quadratic equation
         double a = 0;
         double b = 0;
         double c = 0;
         Color col;
-        for (j = 0; j < Height; j++) {
-            for (i = 0; i < Width; i++) {
+        for (j = 0; j < h; j++) {
+            for (i = 0; i < w; i++) {
                 closestTIndex = -1;
                 double u = ((w - i) - (w / 2));
                 double v = ((h - j) - (h / 2));
@@ -430,6 +413,7 @@ public class Main extends Application {
                     c = rayFromCenterOfSphereToOriginOfLine.dot(rayFromCenterOfSphereToOriginOfLine) - spheres.get(s).getRadius() * spheres.get(s).getRadius();
                     disc = (b * b) - (4 * a * c);
 
+                    //True if sphere is hit (there are 2 intersections)
                     if (disc > 0) {
                         lineIntersectionWithSphere = (-b - sqrt(disc)) / 2 * a;
                         if (lineIntersectionWithSphere > 0 && lineIntersectionWithSphere < closestT || closestT == -1) {
@@ -439,9 +423,11 @@ public class Main extends Application {
                     }
                 }
 
+                //True if no spheres in sphere list
                 if (closestTIndex == -1) {
                     image_writer.setColor(i, j, Color.GRAY);
 
+                //True if camera is inside sphere (there is 1 intersection)
                 } else {
                     if (closestT < 0) {
                         closestT = ((-b + sqrt(disc)) / 2 * a);

@@ -2,6 +2,11 @@ package com.example.cs255assignment;
 
 import static java.lang.Math.*;
 
+/**
+ * @author Thomas McAuley, Cellan Lees
+ *
+ * Class that models a camera vector
+ */
 public class Camera {
     float azimuth;
     float altitude;
@@ -12,6 +17,12 @@ public class Camera {
     Vector vrv = new Vector(1, 0, 0);
     Vector vpn;
 
+    /**
+     *
+     * @param azimuth azimuth slider value
+     * @param altitude altitude slider value
+     * @param distance distance of the camera from center point
+     */
     public Camera(float azimuth, float altitude, float distance) {
         this.azimuth = azimuth;
         this.altitude = altitude;
@@ -30,6 +41,7 @@ public class Camera {
         this.altitude = altitude;
     }
 
+    //Change vrp to behave as if adjusting azimuth
     public void updateCameraAzimuth(){
         double calcAzimuth = this.distance * sin(this.azimuth) * cos(this.altitude);
         double calcDistance = this.distance * cos(this.azimuth);
@@ -37,17 +49,15 @@ public class Camera {
         this.vrp.x = calcAzimuth;
     }
 
+    //Change vrp to behave as if adjusting altitude
     public void updateCameraAltitude() {
-        //Calc vrp.x vrp.y vrp.z with distance
-
         double calcAltitude = this.altitude;
         double calcDistance = this.distance * cos(this.azimuth);
         this.vrp.y = calcAltitude;
         this.vrp.z = calcDistance;
-
     }
 
-    //Camera vectors that change the swivel of the camera (the C++ code)
+    //Camera vectors that change the swivel of the camera
     public void updateCameraVectors() {
         this.vpn = this.lookAt.sub(this.vrp);
         this.vpn.normalise();
@@ -67,10 +77,6 @@ public class Camera {
 
     public Vector getVUV() {
         return this.vuv;
-    }
-
-    public Vector getLookAt() {
-        return this.lookAt;
     }
 
     public Vector getVPN() {

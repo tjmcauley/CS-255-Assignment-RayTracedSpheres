@@ -7,21 +7,30 @@ import javafx.scene.paint.Color;
 
 import static java.lang.Math.sqrt;
 
+/**
+ * @author Thomas McAuley, Cellan Lees
+ *
+ * Class that models a sphere vector
+ */
 public class Sphere extends Vector {
     private double r;
     private double g;
     private double b;
     private int radius;
     private RadioButton radioButton;
-    private boolean selected = false;
+    private boolean selected;
     private Vector cos;
 
-    private double smallestT;
-
-    public Sphere() {
-
-    }
-
+    /**
+     *
+     * @param x x coord of sphere
+     * @param y y coord of sphere
+     * @param z z coord of sphere
+     * @param r red colour of sphere between 0 and 255
+     * @param g green colour of sphere between 0 and 255
+     * @param b blue colour of sphere between 0 and 255
+     * @param radius radius of the sphere
+     */
     public Sphere(int x, int y, int z, double r, double g, double b, int radius) {
         this.x = x;
         this.y = y;
@@ -98,10 +107,6 @@ public class Sphere extends Vector {
         return this.b / 255;
     }
 
-    public Color getSphereColour() {
-        return Color.color(this.r / 255, this.g / 255, this.b / 255);
-    }
-
     public double getRadius() {
         return this.radius;
     }
@@ -110,25 +115,11 @@ public class Sphere extends Vector {
         return this.radioButton;
     }
 
-    public Boolean isLinked() {
-        return this.radioButton != null;
-    }
-
     public Boolean isSelected() {
         return this.selected;
     }
 
-    public void setSmallestT(double smallestT) {
-        this.smallestT = smallestT;
-    }
     public Vector getCos(){
         return this.cos;
-    }
-
-    public double getSmallestT() {
-        return this.smallestT;
-    }
-
-    public void renderSphere(WritableImage image, Vector rayOrigin, Vector rayDirection, Vector light) {
     }
 }
